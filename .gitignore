@@ -2,3 +2,4 @@
 /.gradle/
 FtcRobotController/src/main/caches
 FtcRobotController/src/main/daemon
+local.properties
