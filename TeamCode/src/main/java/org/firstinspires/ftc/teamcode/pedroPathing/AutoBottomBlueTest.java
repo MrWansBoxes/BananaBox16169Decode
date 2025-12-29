@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "Pedro Pathing Autonomous", group = "Autonomous")
+@Autonomous(name = "Test Auto Bottom Blue", group = "Autonomous")
 @Configurable // Panels
 public class AutoBottomBlueTest extends OpMode {
 
@@ -59,11 +59,7 @@ public class AutoBottomBlueTest extends OpMode {
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
     }
-    @Override
-    public void start() {
-        opmodeTimer.resetTimer();
-        setPathState(0);
-    }
+
     @Override
     public void loop() {
         follower.update(); // Update Pedro Pathing
@@ -96,8 +92,6 @@ public class AutoBottomBlueTest extends OpMode {
         launcher2.setPower(launcherOff);
         intake.setPower(intakeOff);
     }
-
-
     public static class Paths {
 
         public PathChain Starttoshoot1;
@@ -281,22 +275,20 @@ public class AutoBottomBlueTest extends OpMode {
                 }
                 break;
             case 3:
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
-                    intake.setPower(intakeOn);
+                if(!follower.isBusy()) {
+
                     follower.followPath(paths.Shootballpile1,true);
                     setPathState(4);
                 }
-                if (!follower.isBusy()) {
-                    launch3balls();
-                }
                 break;
             case 4:
-
-                if(!follower.isBusy()) {
-
-
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    intake.setPower(intakeOn);
                     follower.followPath(paths.Gotoballpile2,true);
                     setPathState(5);
+                }
+                if (!follower.isBusy()) {
+                    launch3balls();
                 }
                 break;
             case 5:
@@ -312,21 +304,20 @@ public class AutoBottomBlueTest extends OpMode {
                 }
                 break;
             case 6:
-
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
-                    intake.setPower(intakeOn);
-                    follower.followPath(paths.Shootballpile2, true);
-                    setPathState(7);
-                }
                 if(!follower.isBusy()) {
-                    launch3balls();
+
+                    follower.followPath(paths.Shootballpile2,true);
+                    setPathState(7);
                 }
                 break;
             case 7:
-                if (!follower.isBusy()) {
-
-                    follower.followPath(paths.Gotoballpile3, true);
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    intake.setPower(intakeOn);
+                    follower.followPath(paths.Gotoballpile3,true);
                     setPathState(8);
+                }
+                if (!follower.isBusy()) {
+                    launch3balls();
                 }
                 break;
             case 8:
@@ -342,25 +333,19 @@ public class AutoBottomBlueTest extends OpMode {
                 }
                 break;
             case 9:
-
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
-                    intake.setPower(intakeOn);
-                    follower.followPath(paths.Shootballpile3, true);
-                    setPathState(10);
-                }
-
                 if(!follower.isBusy()) {
 
-                    launch3balls();
-
+                    follower.followPath(paths.Shootballpile3,true);
+                    setPathState(10);
                 }
                 break;
             case 10:
-
-                if(!follower.isBusy()) {
-
-                    follower.followPath(paths.Gopark, true);
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    follower.followPath(paths.Gopark,true);
                     setPathState(-1);
+                }
+                if (!follower.isBusy()) {
+                    launch3balls();
                 }
                 break;
 
