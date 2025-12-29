@@ -16,7 +16,7 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous(name = "Test Auto Bottom Blue", group = "Autonomous")
+@Autonomous(name = "Pedro Pathing Autonomous", group = "Autonomous")
 @Configurable // Panels
 public class AutoBottomBlueTest extends OpMode {
 
@@ -59,7 +59,11 @@ public class AutoBottomBlueTest extends OpMode {
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
     }
-
+    @Override
+    public void start() {
+        opmodeTimer.resetTimer();
+        setPathState(0);
+    }
     @Override
     public void loop() {
         follower.update(); // Update Pedro Pathing
@@ -92,6 +96,8 @@ public class AutoBottomBlueTest extends OpMode {
         launcher2.setPower(launcherOff);
         intake.setPower(intakeOff);
     }
+
+
     public static class Paths {
 
         public PathChain Starttoshoot1;
@@ -247,7 +253,7 @@ public class AutoBottomBlueTest extends OpMode {
                 launcher2.setPower(launcherPowerFar2);      // start launcher motors
 
                 follower.followPath(paths.Starttoshoot1);
-                //setPathState(1);
+                setPathState(1);
 
                 break;
             case 1:
