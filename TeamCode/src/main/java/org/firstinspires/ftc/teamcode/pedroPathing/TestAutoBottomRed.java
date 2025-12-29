@@ -116,8 +116,8 @@ public class TestAutoBottomRed extends OpMode {
                     .addPath(
                             new BezierCurve(
                                     new Pose(95.731, 8.079),
-                                    new Pose(86.844, 18.581),
-                                    new Pose(85.431, 18.783)
+                                    new Pose(100.780, 16.561),
+                                    new Pose(82.805, 15.349)
                             )
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(65))
@@ -127,7 +127,7 @@ public class TestAutoBottomRed extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(85.431, 18.783),
+                                    new Pose(82.805, 15.349),
                                     new Pose(97.346, 22.216),
                                     new Pose(103.405, 35.344)
                             )
@@ -149,7 +149,7 @@ public class TestAutoBottomRed extends OpMode {
                             new BezierCurve(
                                     new Pose(136.325, 35.748),
                                     new Pose(101.790, 47.461),
-                                    new Pose(85.431, 18.985)
+                                    new Pose(82.805, 15.349)
                             )
                     )
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(65))
@@ -159,7 +159,7 @@ public class TestAutoBottomRed extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(85.431, 18.985),
+                                    new Pose(82.805, 15.349),
                                     new Pose(92.701, 47.461),
                                     new Pose(103.001, 59.579)
                             )
@@ -216,6 +216,7 @@ public class TestAutoBottomRed extends OpMode {
                                     new Pose(88.864, 88.460)
                             )
                     )
+
                     .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(50))
                     .build();
 
@@ -241,10 +242,11 @@ public class TestAutoBottomRed extends OpMode {
                 launcher2.setPower(launcherPowerFar2);      // start launcher motors
 
                 follower.followPath(paths.Shoot1);
-                //setPathState(1);
+                setPathState(1);
 
                 break;
             case 1:
+
 
                 if (pathTimer.getElapsedTimeSeconds() > 4) {
                     intake.setPower(intakeOn);
@@ -269,72 +271,75 @@ public class TestAutoBottomRed extends OpMode {
                 }
                 break;
             case 3:
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
-                    intake.setPower(intakeOn);
+                if(!follower.isBusy()) {
+
                     follower.followPath(paths.Shoot2,true);
                     setPathState(4);
+                }
+                break;
+            case 4:
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    intake.setPower(intakeOn);
+                    follower.followPath(paths.GotoBallPile2,true);
+                    setPathState(6);
                 }
                 if (!follower.isBusy()) {
                     launch3balls();
                 }
                 break;
-            case 4:
-
-                if(!follower.isBusy()) {
-
-
-                    follower.followPath(paths.GotoBallPile2,true);
-                    setPathState(5);
-                }
-                break;
-            case 5:
-
+            case 6:
                 if(!follower.isBusy()) {
 
                     follower.followPath(paths.IntakeBallPile2,true);
-                    setPathState(6);
+                    setPathState(7);
                     sleep(300);
                     intake.setPower(intakeOff);
                     launcher1.setPower(launcherPowerClose1);
                     launcher2.setPower(launcherPowerClose2);      // start launcher motors for close side
                 }
                 break;
-            case 6:
-
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
-                    intake.setPower(intakeOn);
-                    follower.followPath(paths.Shoot3, true);
-                    setPathState(7);
-                }
-                if(!follower.isBusy()) {
-                    launch3balls();
-                }
-                break;
             case 7:
-                if (!follower.isBusy()) {
+                if(!follower.isBusy()) {
 
-                    follower.followPath(paths.GotoBallPile3, true);
+                    follower.followPath(paths.Shoot2,true);
                     setPathState(8);
                 }
                 break;
             case 8:
 
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    intake.setPower(intakeOn);
+                    follower.followPath(paths.GotoBallPile3, true);
+                    setPathState(9);
+                }
+                if(!follower.isBusy()) {
+                    launch3balls();
+                }
+                break;
+
+            case 9:
                 if(!follower.isBusy()) {
 
                     follower.followPath(paths.IntakeBallPile3, true);
-                    setPathState(9);
+                    setPathState(10);
                     sleep(300);
                     intake.setPower(intakeOff);
                     launcher1.setPower(launcherPowerClose1);
                     launcher2.setPower(launcherPowerClose2);
                 }
                 break;
-            case 9:
+            case 10:
+                if(!follower.isBusy()) {
+
+                    follower.followPath(paths.Shoot4,true);
+                    setPathState(4);
+                }
+                break;
+            case 11:
 
                 if (pathTimer.getElapsedTimeSeconds() > 4) {
-                    intake.setPower(intakeOn);
-                    follower.followPath(paths.Shoot4, true);
-                    setPathState(10);
+                    follower.followPath(paths.GoPark, true);
+                    setPathState(-1);
                 }
 
                 if(!follower.isBusy()) {
@@ -343,14 +348,7 @@ public class TestAutoBottomRed extends OpMode {
 
                 }
                 break;
-            case 10:
 
-                if(!follower.isBusy()) {
-
-                    follower.followPath(paths.GoPark, true);
-                    setPathState(-1);
-                }
-                break;
 
         }
         return pathState;
