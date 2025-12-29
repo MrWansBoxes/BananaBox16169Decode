@@ -142,16 +142,16 @@ bench.init(hardwareMap);
         follower.update();
         telemetryM.update();
         if (!automatedDrive) {
-            //Make the last parameter false for field-centric
-            //In case the drivers want to use a "slowMode" you can scale the vectors
-            //This is the normal version to use in the TeleOp
+            // Make the last parameter false for field-centric
+            // In case the drivers want to use a "slowMode" you can scale the vectors
+            // This is the normal version to use in the TeleOp
             if (!slowMode) follower.setTeleOpDrive(
                     -gamepad1.left_stick_y,
                     -gamepad1.left_stick_x,
                     -gamepad1.right_stick_x,
                     true // Robot Centric
             );
-                //This is how it looks with slowMode on
+                // This is how it looks with slowMode on
             else follower.setTeleOpDrive(
                     -gamepad1.left_stick_y * slowModeMultiplier,
                     -gamepad1.left_stick_x * slowModeMultiplier,
@@ -283,7 +283,6 @@ bench.init(hardwareMap);
 
                 double power = P * error + I * integral + D * derivative;
 
-                // Apply power directly (no deadzone, no clamping)
                 turret.setPower(power);
 
                 lastError = error;
