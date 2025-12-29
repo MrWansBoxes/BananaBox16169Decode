@@ -62,7 +62,11 @@ public class TestAutoBottomRed extends OpMode {
         panelsTelemetry.update(telemetry);
 
     }
-
+    @Override
+    public void start() {
+        opmodeTimer.resetTimer();
+        setPathState(0);
+    }
 
     @Override
     public void loop() {
@@ -240,7 +244,6 @@ public class TestAutoBottomRed extends OpMode {
 
                 launcher1.setPower(launcherPowerFar1);
                 launcher2.setPower(launcherPowerFar2);      // start launcher motors
-
                 follower.followPath(paths.Shoot1);
                 setPathState(1);
 
