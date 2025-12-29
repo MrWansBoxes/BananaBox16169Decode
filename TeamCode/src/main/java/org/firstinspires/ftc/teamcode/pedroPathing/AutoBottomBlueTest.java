@@ -59,7 +59,11 @@ public class AutoBottomBlueTest extends OpMode {
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
     }
-
+    @Override
+    public void start() {
+        opmodeTimer.resetTimer();
+        setPathState(0);
+    }
     @Override
     public void loop() {
         follower.update(); // Update Pedro Pathing
