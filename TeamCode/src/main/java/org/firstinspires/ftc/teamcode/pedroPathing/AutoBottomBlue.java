@@ -25,8 +25,8 @@ public class AutoBottomBlue {
 
     private Paths paths;
 
-    // ====== TUNING ======
-    private final double launcherPowerFar1 = 0.85;
+
+    private final double launcherPowerFar1 = 0.85;  // Variables for tuning
     private final double launcherPowerFar2 = -0.85;
     private final double launcherPowerClose1 = 0.68;
     private final double launcherPowerClose2 = -0.68;
@@ -36,11 +36,7 @@ public class AutoBottomBlue {
     private final double flickUp = 0.86;
     private final double flickDown = 0.5;
 
-    public AutoBottomBlue(Follower follower,
-                          Servo flip1,
-                          DcMotor intake,
-                          DcMotor launcher1,
-                          DcMotor launcher2) {
+    public AutoBottomBlue(Follower follower, Servo flip1, DcMotor intake, DcMotor launcher1, DcMotor launcher2) {
 
         this.follower = follower;
         this.flip1 = flip1;
@@ -52,7 +48,7 @@ public class AutoBottomBlue {
     }
 
     public void start() {
-        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
+        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90))); // starting spot
         paths = new Paths(follower);
         setPathState(0);
     }
@@ -62,52 +58,59 @@ public class AutoBottomBlue {
         autonomousPathUpdate();
     }
 
-    private void launch3balls() {
+    private void launch3balls() {  // we call this function every time you want to launch 3 balls
         sleep(200);
         flip1.setPosition(flickUp);
         sleep(200);
         flip1.setPosition(flickDown);
         sleep(700);
-
         intake.setPower(intakeOn);
         sleep(1000);
-
         flip1.setPosition(flickUp);
         sleep(200);
         flip1.setPosition(flickDown);
         sleep(800);
-
         flip1.setPosition(flickUp);
         sleep(200);
         flip1.setPosition(flickDown);
         sleep(600);
-
         launcher1.setPower(launcherOff);
         launcher2.setPower(launcherOff);
         intake.setPower(intakeOff);
     }
 
+
+
+    /* You could check for
+           - Follower State: "if(!follower.isBusy()) {}"
+           - Time: "if(pathTimer.getElapsedTimeSeconds() > 1) {}"
+           - Robot Position: "if(follower.getPose().getX() > 36) {}"
+           */
+
     private void autonomousPathUpdate() {
         switch (pathState) {
 
             case 0:
-                launcher1.setPower(launcherPowerFar1);
+                launcher1.setPower(launcherPowerFar1);  // set power to launcher and moves to shoot position
                 launcher2.setPower(launcherPowerFar2);
                 follower.followPath(paths.Starttoshoot1);
                 setPathState(1);
                 break;
 
             case 1:
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+
+                if (!follower.isBusy()) launch3balls();  // when the robot finishes the path it will launch 3 balls
+
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     intake.setPower(intakeOn);
                     follower.followPath(paths.Movetoballpile1, true);
                     setPathState(2);
                 }
-                if (!follower.isBusy()) launch3balls();
+
                 break;
 
             case 2:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
                     follower.followPath(paths.Intakeballpile1, true);
                     sleep(300);
                     intake.setPower(intakeOff);
@@ -118,23 +121,26 @@ public class AutoBottomBlue {
                 break;
 
             case 3:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy()) {  // moves to shoot position
                     follower.followPath(paths.Shootballpile1, true);
                     setPathState(4);
                 }
                 break;
 
             case 4:
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+
+                if (!follower.isBusy()) launch3balls();  // when the robot finishes the path it will launch 3 balls
+
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     intake.setPower(intakeOn);
                     follower.followPath(paths.Gotoballpile2, true);
                     setPathState(5);
                 }
-                if (!follower.isBusy()) launch3balls();
+
                 break;
 
             case 5:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
                     follower.followPath(paths.Grabballpile2, true);
                     sleep(300);
                     intake.setPower(intakeOff);
@@ -145,23 +151,26 @@ public class AutoBottomBlue {
                 break;
 
             case 6:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy()) {  // moves to shoot position
                     follower.followPath(paths.Shootballpile2, true);
                     setPathState(7);
                 }
                 break;
 
             case 7:
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+
+                if (!follower.isBusy()) launch3balls();  // when the robot finishes the path it will launch 3 balls
+
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     intake.setPower(intakeOn);
                     follower.followPath(paths.Gotoballpile3, true);
                     setPathState(8);
                 }
-                if (!follower.isBusy()) launch3balls();
+
                 break;
 
             case 8:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
                     follower.followPath(paths.Pickupballpile3, true);
                     sleep(300);
                     intake.setPower(intakeOff);
@@ -172,18 +181,21 @@ public class AutoBottomBlue {
                 break;
 
             case 9:
-                if (!follower.isBusy()) {
+                if (!follower.isBusy()) {  // moves to shoot position
                     follower.followPath(paths.Shootballpile3, true);
                     setPathState(10);
                 }
                 break;
 
             case 10:
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+
+                if (!follower.isBusy()) launch3balls();  // when the robot finishes the path it will launch 3 balls
+
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     follower.followPath(paths.Gopark, true);
                     setPathState(-1);
                 }
-                if (!follower.isBusy()) launch3balls();
+
                 break;
         }
     }
@@ -193,7 +205,7 @@ public class AutoBottomBlue {
         pathTimer.resetTimer();
     }
 
-    // ===== PATHS =====
+    // Start of all the paths
     public static class Paths {
         public PathChain Starttoshoot1, Movetoballpile1, Intakeballpile1,
                 Shootballpile1, Gotoballpile2, Grabballpile2,
@@ -202,7 +214,7 @@ public class AutoBottomBlue {
 
         public Paths(Follower follower) {
 
-            Starttoshoot1 = follower.pathBuilder()
+            Starttoshoot1 = follower.pathBuilder()  // this sets up all the paths with the control points and heading
                     .addPath(new BezierCurve(
                             new Pose(48.269, 7.877),
                             new Pose(57.358, 9.290),

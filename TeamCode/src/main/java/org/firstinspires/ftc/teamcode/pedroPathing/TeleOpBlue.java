@@ -29,34 +29,46 @@ import java.util.function.Supplier;
 @Configurable
 public class TeleOpBlue extends OpMode {
 
-    ColorSensor bench = new ColorSensor();
+    ColorSensor bench = new ColorSensor();   // gets the color sensor class
     ColorSensor.DetectedColor detectedColor;
     private Follower follower;
-    public static Pose startingPose; //See ExampleAuto to understand how to use this
+    public static Pose startingPose;    //See ExampleAuto to understand how to use this
     private boolean automatedDrive;
     private Supplier<PathChain> pathChain;
     private TelemetryManager telemetryM;
     private boolean slowMode = false;
-    private double slowModeMultiplier = 0.5;
+    private double slowModeMultiplier = 0.5;  // we don't use this
 
-    private Servo flip1;
-    private Servo lift1;
-    private Servo lift2;
-    private DcMotor intake;
-    private DcMotor launcher1;
-    private DcMotor launcher2;
-    private Servo light;
+    private Servo flip1, lift1, lift2, light;  // servos
+    private DcMotor intake, launcher1, launcher2;  // DcMotors
 
-    int intakeflag = 0;
+    int intakeflag = 0;   // these are the flags
     int launchflag = 0;
     int parkflag = 0;
     int limeflag = 0;
 
-    private DcMotorEx turret;
-    private Limelight3A limelight;
+    private double launcherPowerFar1 = 0.85;
+    private double launcherPowerFar2 = -0.85;
+    private int launcherOff = 0;
+    private double launcherPowerClose1 = 0.68;
+    private double launcherPowerClose2 = -0.68;
+    private int intakeOn = 1;
+    private int intakeOff = 0;
+    private int intakeReverse = -1;
+    private double flickUp = 0.86;
+    private double flickDown = 0.5;
+    private double lightGreen = 0.5;
+    private double lightPurple = 0.722;
+    private int lightOff = 0;
+    private int liftUp = 1;
+    private int liftDown = 0;
+
+
+    private DcMotorEx turret;    // turret
+    private Limelight3A limelight;  // limelight
 
     // --- PID constants ---
-    public static double P = 0.02;
+    public static double P = 0.02;    // these are the PID controls for the turret and limelight
     public static double I = 0.0;
     public static double D = 0.0;
 
@@ -69,7 +81,7 @@ public class TeleOpBlue extends OpMode {
         bench.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(startingPose == null ? new Pose() : startingPose);
+        follower.setStartingPose(startingPose == null ? new Pose() : startingPose);   // set where the robot starts in TeleOp
         follower.update();
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -78,7 +90,7 @@ public class TeleOpBlue extends OpMode {
                 .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(45), 0.8))
                 .build();
 
-        flip1 = hardwareMap.get(Servo.class,"flip1");
+        flip1 = hardwareMap.get(Servo.class,"flip1");  // all the hardware maps for the servos, DcMotors, limelight, and turret
         lift1 = hardwareMap.get(Servo.class,"lift1");
         lift2 = hardwareMap.get(Servo.class,"lift2");
         intake = hardwareMap.get(DcMotor.class,"intake");
@@ -106,9 +118,9 @@ public class TeleOpBlue extends OpMode {
 
     @Override
     public void start() {
-        limelight.start();
-        follower.startTeleopDrive();
-        limelight.pipelineSwitch(1);
+        limelight.start();   // starts the limelight
+        follower.startTeleopDrive();  // starts the driving
+        limelight.pipelineSwitch(1);  // pipeline 1 is for blue tracking
     }
 
     @Override
@@ -116,15 +128,15 @@ public class TeleOpBlue extends OpMode {
         detectedColor = bench.getDetectedColor(telemetry);
         telemetry.addData("Detected Color", detectedColor);
         //Call this once per loop
-        flip1.setPosition(0.5);
+        flip1.setPosition(flickDown);
         if (detectedColor == ColorSensor.DetectedColor.GREEN){
-            light.setPosition(0.5);
+            light.setPosition(lightGreen);
         }
         else if (detectedColor == ColorSensor.DetectedColor.PURPLE){
-            light.setPosition(0.722);
+            light.setPosition(lightPurple);
         }
         else if(detectedColor == ColorSensor.DetectedColor.UNKNOWN){
-            light.setPosition(0);
+            light.setPosition(lightOff);
         }
 
         follower.update();
@@ -172,37 +184,37 @@ public class TeleOpBlue extends OpMode {
 
         if (gamepad1.yWasPressed()) {
 
-            flip1.setPosition(0.86);
+            flip1.setPosition(flickUp);
             sleep(200);
-            flip1.setPosition(0.5);
+            flip1.setPosition(flickDown);
         }
 
         if (gamepad1.aWasPressed()){
             if (intakeflag == 0){
-                intake.setPower(1);
+                intake.setPower(intakeOn);
                 intakeflag = 1;
             }
             else if (intakeflag == 1) {
-                intake.setPower(0);
+                intake.setPower(intakeOff);
                 intakeflag = 0;
             }
             else if (intakeflag == -1){
-                intake.setPower(0);
+                intake.setPower(intakeOff);
                 intakeflag = 0;
             }
         }
 
         if (gamepad1.bWasPressed()) {
             if (intakeflag == 0){
-                intake.setPower(-1);
+                intake.setPower(intakeReverse);
                 intakeflag = -1;
             }
             else if(intakeflag == -1){
-                intake.setPower(0);
+                intake.setPower(intakeOff);
                 intakeflag = 0;
             }
             else if(intakeflag == 1){
-                intake.setPower(0);
+                intake.setPower(intakeOff);
                 intakeflag = 0;
             }
         }
@@ -210,14 +222,14 @@ public class TeleOpBlue extends OpMode {
 
         if (gamepad1.dpadUpWasPressed()) {
             if (launchflag == 0) {
-                launcher1.setPower(0.85);
-                launcher2.setPower(-0.85);
+                launcher1.setPower(launcherPowerFar1);
+                launcher2.setPower(launcherPowerFar2);
                 launchflag = 1;
                 limeflag = 1;
             }
             else if (launchflag == 1) {
-                launcher1.setPower(0);
-                launcher2.setPower(0);
+                launcher1.setPower(launcherOff);
+                launcher2.setPower(launcherOff);
                 launchflag = 0;
                 limeflag = 0;
             }
@@ -225,14 +237,14 @@ public class TeleOpBlue extends OpMode {
 
         if (gamepad1.dpadDownWasPressed()) {
             if (launchflag == 0) {
-                launcher1.setPower(0.68);
-                launcher2.setPower(-0.68);
+                launcher1.setPower(launcherPowerClose1);
+                launcher2.setPower(launcherPowerClose2);
                 launchflag = 1;
                 limeflag = 1;
             }
             else if (launchflag == 1) {
-                launcher1.setPower(0);
-                launcher2.setPower(0);
+                launcher1.setPower(launcherOff);
+                launcher2.setPower(launcherOff);
                 launchflag = 0;
                 limeflag = 0;
             }
@@ -240,13 +252,13 @@ public class TeleOpBlue extends OpMode {
 
         if (gamepad2.yWasPressed()) {
             if (parkflag == 0){
-                lift2.setPosition(1);
-                lift1.setPosition(1);
+                lift2.setPosition(liftUp);
+                lift1.setPosition(liftUp);
                 parkflag = 1;
             }
             else if (parkflag == 1){
-                lift1.setPosition(0);
-                lift2.setPosition(0);
+                lift1.setPosition(liftDown);
+                lift2.setPosition(liftDown);
                 parkflag = 0;
             }
         }
