@@ -283,7 +283,7 @@ public class TeleOpBlue extends OpMode {
 
                 double power = P * error + I * integral + D * derivative;
 
-                // Apply power directly (no deadzone, no clamping)
+
                 turret.setPower(power);
 
                 lastError = error;
