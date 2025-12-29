@@ -18,14 +18,14 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.tuningAndConstants.Constants;
 
-@Autonomous(name = "Pedro Pathing Autonomous", group = "Autonomous")
+@Autonomous(name = "Auto Top Red Test", group = "Autonomous")
 @Configurable // Panels
-public class AutoTopBlueTest extends OpMode {
+public class AutoTopRedTest extends OpMode {
 
     private TelemetryManager panelsTelemetry; // Panels Telemetry instance
     public Follower follower; // Pedro Pathing follower instance
     private int pathState; // Current autonomous path state (state machine)
-    private Paths paths; // Paths defined in the Paths class
+    private AutoBottomRedTest.Paths paths; // Paths defined in the Paths class
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Servo flip1;
     private DcMotor intake;
@@ -43,7 +43,6 @@ public class AutoTopBlueTest extends OpMode {
 
     @Override
     public void init() {
-
         flip1 = hardwareMap.get(Servo.class, "flip1");
         intake = hardwareMap.get(DcMotor.class, "intake");
         launcher1 = hardwareMap.get(DcMotor.class, "launcher1");
@@ -55,18 +54,16 @@ public class AutoTopBlueTest extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
 
-        paths = new Paths(follower); // Build paths
+        paths = new AutoBottomRedTest.Paths(follower); // Build paths
 
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
     }
-
     @Override
     public void start() {
         opmodeTimer.resetTimer();
         setPathState(0);
     }
-
     @Override
     public void loop() {
         follower.update(); // Update Pedro Pathing
@@ -79,7 +76,6 @@ public class AutoTopBlueTest extends OpMode {
         panelsTelemetry.debug("Heading", follower.getPose().getHeading());
         panelsTelemetry.update(telemetry);
     }
-
     private void launch3balls() {
         sleep(200);
         flip1.setPosition(flickUp);
@@ -100,15 +96,14 @@ public class AutoTopBlueTest extends OpMode {
         launcher2.setPower(launcherOff);
         intake.setPower(intakeOff);
     }
-
     public static class Paths {
+
         public PathChain Shoot1;
         public PathChain GotoBallPile1;
         public PathChain IntakeBallPile1;
-        public PathChain Shoot2;
+        public PathChain Shoot3;
         public PathChain GotoBallPile2;
         public PathChain IntakeBallPile2;
-        public PathChain Shoot3;
         public PathChain GotoBallPile3;
         public PathChain IntakeBallPile3;
         public PathChain Shoot4;
@@ -118,59 +113,23 @@ public class AutoTopBlueTest extends OpMode {
             Shoot1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierCurve(
-                                    new Pose(32.314, 135.518),
-                                    new Pose(33.930, 101.588),
-                                    new Pose(59.781, 83.613)
-                            )
+                            new BezierLine(new Pose(111.686, 135.518), new Pose(83.815, 83.209))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(132))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(52))
                     .build();
 
             GotoBallPile1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(59.781, 83.613), new Pose(39.987, 83.962))
+                            new BezierLine(new Pose(83.815, 83.209), new Pose(104.819, 83.411))
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(132), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
                     .build();
 
             IntakeBallPile1 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(39.987, 83.962), new Pose(14.339, 84.219))
-                    )
-                    .setTangentHeadingInterpolation()
-                    .build();
-
-            Shoot2 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierCurve(
-                                    new Pose(14.339, 84.219),
-                                    new Pose(36.757, 73.919),
-                                    new Pose(59.781, 83.613)
-                            )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(132))
-                    .build();
-
-            GotoBallPile2 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierCurve(
-                                    new Pose(59.781, 83.613),
-                                    new Pose(60.387, 61.195),
-                                    new Pose(39.787, 59.781)
-                            )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(132), Math.toRadians(180))
-                    .build();
-
-            IntakeBallPile2 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(39.787, 59.781), new Pose(8.281, 59.781))
+                            new BezierLine(new Pose(104.819, 83.411), new Pose(129.257, 83.411))
                     )
                     .setTangentHeadingInterpolation()
                     .build();
@@ -179,30 +138,62 @@ public class AutoTopBlueTest extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(8.281, 59.781),
-                                    new Pose(62.609, 52.309),
-                                    new Pose(59.781, 83.613)
+                                    new Pose(129.257, 83.411),
+                                    new Pose(104.617, 69.273),
+                                    new Pose(83.815, 83.209)
                             )
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(132))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(52))
+                    .build();
+
+            GotoBallPile2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(83.815, 83.209),
+                                    new Pose(81.795, 58.771),
+                                    new Pose(104.617, 59.579)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
+                    .build();
+
+            IntakeBallPile2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(104.617, 59.579), new Pose(135.719, 59.579))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            Shoot3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(135.719, 59.579),
+                                    new Pose(77.554, 50.087),
+                                    new Pose(83.815, 83.209)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(52))
                     .build();
 
             GotoBallPile3 = follower
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(59.781, 83.613),
-                                    new Pose(60.589, 34.334),
-                                    new Pose(39.383, 35.748)
+                                    new Pose(83.815, 83.209),
+                                    new Pose(75.736, 33.122),
+                                    new Pose(104.415, 35.142)
                             )
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(132), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
                     .build();
 
             IntakeBallPile3 = follower
                     .pathBuilder()
                     .addPath(
-                            new BezierLine(new Pose(39.383, 35.748), new Pose(8.281, 35.546))
+                            new BezierLine(new Pose(104.415, 35.142), new Pose(135.719, 35.142))
                     )
                     .setTangentHeadingInterpolation()
                     .build();
@@ -211,24 +202,24 @@ public class AutoTopBlueTest extends OpMode {
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(8.281, 35.546),
-                                    new Pose(13.935, 21.206),
-                                    new Pose(61.397, 21.408)
+                                    new Pose(135.719, 35.142),
+                                    new Pose(80.381, 38.777),
+                                    new Pose(83.209, 19.792)
                             )
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(117))
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(60))
                     .build();
 
             GoPark = follower
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
-                                    new Pose(61.397, 21.408),
-                                    new Pose(55.136, 6.665),
-                                    new Pose(35.546, 9.492)
+                                    new Pose(83.209, 19.792),
+                                    new Pose(107.243, 22.418),
+                                    new Pose(108.050, 10.300)
                             )
                     )
-                    .setLinearHeadingInterpolation(Math.toRadians(117), Math.toRadians(180))
+                    .setLinearHeadingInterpolation(Math.toRadians(60), Math.toRadians(180))
                     .build();
         }
     }
