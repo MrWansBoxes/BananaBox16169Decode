@@ -22,15 +22,15 @@ public class AutoSelector extends OpMode {
     Servo flip1;
     DcMotor intake, launcher1, launcher2;
 
-    AutoBottomBlue bottomBlueAuto;
-    AutoBottomRed bottomRedAuto;
+    AutoBottomBlue bottomBlueAuto;   // the bottom blue auto
+    AutoBottomRed bottomRedAuto;     // the bottom red auto
 
 
     @Override
     public void init() {
         follower = Constants.createFollower(hardwareMap);
 
-        flip1 = hardwareMap.get(Servo.class, "flip1");
+        flip1 = hardwareMap.get(Servo.class, "flip1");     // Hardware map names
         intake = hardwareMap.get(DcMotor.class, "intake");
         launcher1 = hardwareMap.get(DcMotor.class, "launcher1");
         launcher2 = hardwareMap.get(DcMotor.class, "launcher2");
@@ -42,7 +42,7 @@ public class AutoSelector extends OpMode {
 
     @Override
     public void init_loop() {
-        if (gamepad1.x) alliance = Alliance.BLUE;
+        if (gamepad1.x) alliance = Alliance.BLUE;   // alliance and color selections
         if (gamepad1.b) alliance = Alliance.RED;
 
         if (gamepad1.a) startPos = StartPos.BOTTOM;
@@ -55,7 +55,7 @@ public class AutoSelector extends OpMode {
 
     @Override
     public void start() {
-        if (alliance == Alliance.BLUE && startPos == StartPos.BOTTOM) {
+        if (alliance == Alliance.BLUE && startPos == StartPos.BOTTOM) {   // starts the selected auto
             bottomBlueAuto.start();
         }
         if (alliance == Alliance.RED && startPos == StartPos.BOTTOM) {
@@ -65,7 +65,7 @@ public class AutoSelector extends OpMode {
 
     @Override
     public void loop() {
-        if (alliance == Alliance.BLUE && startPos == StartPos.BOTTOM) {
+        if (alliance == Alliance.BLUE && startPos == StartPos.BOTTOM) {  // updates the selected auto
             bottomBlueAuto.update();
         }
         if (alliance == Alliance.RED && startPos == StartPos.BOTTOM) {
