@@ -16,6 +16,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.pedroPathing.tuningAndConstants.Constants;
+
 @Autonomous(name = "Test Auto Bottom Red", group = "Autonomous")
 @Configurable // Panels
 public class AutoBottomRedTest extends OpMode {

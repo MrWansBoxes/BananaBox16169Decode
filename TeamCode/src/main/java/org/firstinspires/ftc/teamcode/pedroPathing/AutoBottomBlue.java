@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.pedroPathing; // make sure this aligns with class location
+package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import static android.os.SystemClock.sleep;
 
@@ -6,143 +6,286 @@ import com.pedropathing.follower.Follower;
 import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
-import com.pedropathing.paths.Path;
 import com.pedropathing.paths.PathChain;
 import com.pedropathing.util.Timer;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import  com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Autonomous
-public class AutoBottomBlue extends OpMode {
+public class AutoBottomBlue {
 
-    private Follower follower;
-    private Timer pathTimer, actionTimer, opmodeTimer;
+    private final Follower follower;
+
+    private final Servo flip1;
+    private final DcMotor intake;
+    private final DcMotor launcher1;
+    private final DcMotor launcher2;
 
     private int pathState;
-    private DcMotor launcher1;
-    private DcMotor launcher2;
-    private Servo flip1;
-    private DcMotor intake;
-    private DcMotorEx turret;
+    private final Timer pathTimer;
 
-    private final Pose startPose = new Pose(48.2243, 8.29906542056074, Math.toRadians(90)); // Start Pose of our robot.
-    private final Pose scorePose = new Pose(34.766356, 11.887850467289713, Math.toRadians(90)); // Scoring Pose of our robot. It is facing the goal at a 135 degree angle.
+    private Paths paths;
 
-    private Path scorePreload;
-    private PathChain grabPickup1, scorePickup1, grabPickup2, scorePickup2, grabPickup3, scorePickup3;
+    // ====== TUNING ======
+    private final double launcherPowerFar1 = 0.85;
+    private final double launcherPowerFar2 = -0.85;
+    private final double launcherPowerClose1 = 0.68;
+    private final double launcherPowerClose2 = -0.68;
+    private final int launcherOff = 0;
+    private final int intakeOn = 1;
+    private final int intakeOff = 0;
+    private final double flickUp = 0.86;
+    private final double flickDown = 0.5;
 
-    public void buildPaths() {
-        /* This is our scorePreload path. We are using a BezierLine, which is a straight line. */
-        scorePreload = new Path(new BezierCurve(startPose, scorePose));
-        scorePreload.setLinearHeadingInterpolation(startPose.getHeading(), scorePose.getHeading());
-    }
+    public AutoBottomBlue(Follower follower,
+                          Servo flip1,
+                          DcMotor intake,
+                          DcMotor launcher1,
+                          DcMotor launcher2) {
 
-    public void autonomousPathUpdate() {
-        switch (pathState) {
-            case 0:
+        this.follower = follower;
+        this.flip1 = flip1;
+        this.intake = intake;
+        this.launcher1 = launcher1;
+        this.launcher2 = launcher2;
 
-                if (pathTimer.getElapsedTimeSeconds() > 27){
-                    sleep(200);
-                    flip1.setPosition(0.86);
-                    sleep(200);
-                    flip1.setPosition(0.5);
-                    sleep(700);
-                    intake.setPower(1);
-                    sleep(700);
-                    flip1.setPosition(0.86);
-                    sleep(200);
-                    flip1.setPosition(0.5);
-                    sleep(700);
-                    flip1.setPosition(0.86);
-                    sleep(200);
-                    flip1.setPosition(0.5);
-                    sleep(500);
-                    launcher1.setPower(0.0);
-                    launcher2.setPower(0.0);
-                }
-
-                if (pathTimer.getElapsedTimeSeconds() > 27) {
-                    follower.followPath(scorePreload);
-                    setPathState(-1);
-                }
-                    break;
-
-        }
-    }
-
-    /**
-     * These change the states of the paths and actions. It will also reset the timers of the individual switches
-     **/
-    public void setPathState(int pState) {
-        pathState = pState;
-        pathTimer.resetTimer();
-    }
-
-    /**
-     * This is the main loop of the OpMode, it will run repeatedly after clicking "Play".
-     **/
-    @Override
-    public void loop() {
-
-        // These loop the movements of the robot, these must be called continuously in order to work
-        follower.update();
-        autonomousPathUpdate();
-
-        // Feedback to Driver Hub for debugging
-        telemetry.addData("path state", pathState);
-        telemetry.addData("x", follower.getPose().getX());
-        telemetry.addData("y", follower.getPose().getY());
-        telemetry.addData("heading", follower.getPose().getHeading());
-        telemetry.update();
-    }
-
-    /**
-     * This method is called once at the init of the OpMode.
-     **/
-    @Override
-    public void init() {
         pathTimer = new Timer();
-        opmodeTimer = new Timer();
-        opmodeTimer.resetTimer();
-
-
-        follower = Constants.createFollower(hardwareMap);
-        buildPaths();
-        follower.setStartingPose(startPose);
-
     }
 
-    /**
-     * This method is called continuously after Init while waiting for "play".
-     **/
-    @Override
-    public void init_loop() {
-        launcher1 = hardwareMap.get(DcMotor.class, "launcher1");
-        launcher2 = hardwareMap.get(DcMotor.class, "launcher2");
-        flip1 = hardwareMap.get(Servo.class,"flip1");
-        intake = hardwareMap.get(DcMotor.class,"intake");
-        turret = hardwareMap.get(DcMotorEx.class, "turret");
-        turret.setMode(DcMotorEx.RunMode.RUN_WITHOUT_ENCODER);
-        turret.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    }
-
-    /**
-     * This method is called once at the start of the OpMode.
-     * It runs all the setup actions, including building paths and starting the path system
-     **/
-    @Override
     public void start() {
-        opmodeTimer.resetTimer();
+        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
+        paths = new Paths(follower);
         setPathState(0);
     }
 
-    /**
-     * We do not use this because everything should automatically disable
-     **/
-    @Override
-    public void stop() {
+    public void update() {
+        follower.update();
+        autonomousPathUpdate();
+    }
+
+    private void launch3balls() {
+        sleep(200);
+        flip1.setPosition(flickUp);
+        sleep(200);
+        flip1.setPosition(flickDown);
+        sleep(700);
+
+        intake.setPower(intakeOn);
+        sleep(1000);
+
+        flip1.setPosition(flickUp);
+        sleep(200);
+        flip1.setPosition(flickDown);
+        sleep(800);
+
+        flip1.setPosition(flickUp);
+        sleep(200);
+        flip1.setPosition(flickDown);
+        sleep(600);
+
+        launcher1.setPower(launcherOff);
+        launcher2.setPower(launcherOff);
+        intake.setPower(intakeOff);
+    }
+
+    private void autonomousPathUpdate() {
+        switch (pathState) {
+
+            case 0:
+                launcher1.setPower(launcherPowerFar1);
+                launcher2.setPower(launcherPowerFar2);
+                follower.followPath(paths.Starttoshoot1);
+                setPathState(1);
+                break;
+
+            case 1:
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    intake.setPower(intakeOn);
+                    follower.followPath(paths.Movetoballpile1, true);
+                    setPathState(2);
+                }
+                if (!follower.isBusy()) launch3balls();
+                break;
+
+            case 2:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.Intakeballpile1, true);
+                    sleep(300);
+                    intake.setPower(intakeOff);
+                    launcher1.setPower(launcherPowerFar1);
+                    launcher2.setPower(launcherPowerFar2);
+                    setPathState(3);
+                }
+                break;
+
+            case 3:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.Shootballpile1, true);
+                    setPathState(4);
+                }
+                break;
+
+            case 4:
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    intake.setPower(intakeOn);
+                    follower.followPath(paths.Gotoballpile2, true);
+                    setPathState(5);
+                }
+                if (!follower.isBusy()) launch3balls();
+                break;
+
+            case 5:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.Grabballpile2, true);
+                    sleep(300);
+                    intake.setPower(intakeOff);
+                    launcher1.setPower(launcherPowerClose1);
+                    launcher2.setPower(launcherPowerClose2);
+                    setPathState(6);
+                }
+                break;
+
+            case 6:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.Shootballpile2, true);
+                    setPathState(7);
+                }
+                break;
+
+            case 7:
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    intake.setPower(intakeOn);
+                    follower.followPath(paths.Gotoballpile3, true);
+                    setPathState(8);
+                }
+                if (!follower.isBusy()) launch3balls();
+                break;
+
+            case 8:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.Pickupballpile3, true);
+                    sleep(300);
+                    intake.setPower(intakeOff);
+                    launcher1.setPower(launcherPowerClose1);
+                    launcher2.setPower(launcherPowerClose2);
+                    setPathState(9);
+                }
+                break;
+
+            case 9:
+                if (!follower.isBusy()) {
+                    follower.followPath(paths.Shootballpile3, true);
+                    setPathState(10);
+                }
+                break;
+
+            case 10:
+                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                    follower.followPath(paths.Gopark, true);
+                    setPathState(-1);
+                }
+                if (!follower.isBusy()) launch3balls();
+                break;
+        }
+    }
+
+    private void setPathState(int state) {
+        pathState = state;
+        pathTimer.resetTimer();
+    }
+
+    // ===== PATHS =====
+    public static class Paths {
+        public PathChain Starttoshoot1, Movetoballpile1, Intakeballpile1,
+                Shootballpile1, Gotoballpile2, Grabballpile2,
+                Shootballpile2, Gotoballpile3, Pickupballpile3,
+                Shootballpile3, Gopark;
+
+        public Paths(Follower follower) {
+
+            Starttoshoot1 = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(48.269, 7.877),
+                            new Pose(57.358, 9.290),
+                            new Pose(60.387, 17.975)))
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(115))
+                    .build();
+
+            Movetoballpile1 = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(60.387, 17.975),
+                            new Pose(55.338, 36.151),
+                            new Pose(40.191, 35.546)))
+                    .setLinearHeadingInterpolation(Math.toRadians(115), Math.toRadians(180))
+                    .build();
+
+            Intakeballpile1 = follower.pathBuilder()
+                    .addPath(new BezierLine(
+                            new Pose(40.191, 35.546),
+                            new Pose(8.886, 35.546)))
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            Shootballpile1 = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(8.886, 35.546),
+                            new Pose(52.511, 40.999),
+                            new Pose(60.387, 17.975)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(115))
+                    .build();
+
+            Gotoballpile2 = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(60.387, 17.975),
+                            new Pose(62.205, 48.067),
+                            new Pose(40.393, 59.781)))
+                    .setLinearHeadingInterpolation(Math.toRadians(115), Math.toRadians(180))
+                    .build();
+
+            Grabballpile2 = follower.pathBuilder()
+                    .addPath(new BezierLine(
+                            new Pose(40.393, 59.781),
+                            new Pose(8.281, 59.579)))
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            Shootballpile2 = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(8.281, 59.579),
+                            new Pose(57.560, 47.058),
+                            new Pose(56.550, 90.278)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(137))
+                    .build();
+
+            Gotoballpile3 = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(56.550, 90.278),
+                            new Pose(50.491, 82.199),
+                            new Pose(39.787, 84.219)))
+                    .setLinearHeadingInterpolation(Math.toRadians(137), Math.toRadians(180))
+                    .build();
+
+            Pickupballpile3 = follower.pathBuilder()
+                    .addPath(new BezierLine(
+                            new Pose(39.787, 84.219),
+                            new Pose(15.147, 84.017)))
+                    .setTangentHeadingInterpolation()
+                    .build();
+
+            Shootballpile3 = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(15.147, 84.017),
+                            new Pose(40.797, 77.352),
+                            new Pose(56.550, 90.076)))
+                    .setLinearHeadingInterpolation(Math.toRadians(180), Math.toRadians(137))
+                    .build();
+
+            Gopark = follower.pathBuilder()
+                    .addPath(new BezierCurve(
+                            new Pose(56.550, 90.076),
+                            new Pose(44.028, 80.785),
+                            new Pose(29.891, 88.460)))
+                    .setLinearHeadingInterpolation(Math.toRadians(137), Math.toRadians(90))
+                    .build();
+        }
     }
 }

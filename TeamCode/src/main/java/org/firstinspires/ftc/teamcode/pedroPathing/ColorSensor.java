@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.pedroPathing;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
