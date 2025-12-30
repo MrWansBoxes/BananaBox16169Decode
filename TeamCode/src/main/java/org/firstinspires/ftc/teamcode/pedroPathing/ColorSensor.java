@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.pedroPathing;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 import com.qualcomm.robotcore.hardware.NormalizedColorSensor;
 import com.qualcomm.robotcore.hardware.NormalizedRGBA;
@@ -42,10 +41,10 @@ Green =<0.05, >0.09, <0.1
 Purple =>0.04, <0.09, >0.08
 
  */
-if (normRed < 0.05 && normGreen > 0.09 && normBlue < 0.1){
+if (normRed < 0.05 && normGreen > 0.09 && normBlue < 0.1){  // norm RGB values for the green artifact
     return DetectedColor.GREEN;
 }
-else if (normRed > 0.04 && normGreen < 0.09 && normBlue > 0.08) {
+else if (normRed > 0.04 && normGreen < 0.09 && normBlue > 0.08) {  // norm RGB values for the green artifact
     return DetectedColor.PURPLE;
 }
 
