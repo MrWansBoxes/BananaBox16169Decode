@@ -53,7 +53,7 @@ public class AutoTopBlueTest extends OpMode {
         opmodeTimer = new Timer();
         opmodeTimer.resetTimer();
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
+        follower.setStartingPose(new Pose(32.31416549789621, 135.51753155680223, Math.toRadians(90)));
 
         paths = new Paths(follower); // Build paths
 
