@@ -48,7 +48,7 @@ public class AutoBottomBlue {
     }
 
     public void start() {
-        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90))); // starting spot
+        follower.setStartingPose(new Pose(48.269284712482474, 8.078541374474053, Math.toRadians(90))); // starting spot
         paths = new Paths(follower);
         setPathState(0);
     }
@@ -216,7 +216,7 @@ public class AutoBottomBlue {
 
             Starttoshoot1 = follower.pathBuilder()  // this sets up all the paths with the control points and heading
                     .addPath(new BezierCurve(
-                            new Pose(48.269, 7.877),
+                            new Pose(48.269, 8.079),
                             new Pose(57.358, 9.290),
                             new Pose(60.387, 17.975)))
                     .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(115))
