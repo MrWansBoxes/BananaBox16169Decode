@@ -44,7 +44,7 @@ public class AutoTopBlueTest extends OpMode {
     @Override
     public void init() {
 
-        flip1 = hardwareMap.get(Servo.class, "flip1");
+        flip1 = hardwareMap.get(Servo.class, "flip1");  // call motors from configuration
         intake = hardwareMap.get(DcMotor.class, "intake");
         launcher1 = hardwareMap.get(DcMotor.class, "launcher1");
         launcher2 = hardwareMap.get(DcMotor.class, "launcher2");
