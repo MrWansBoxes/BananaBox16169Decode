@@ -47,7 +47,7 @@ public class AutoBottomRed {
     }
 
     public void start() {
-        follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));  // starting spot
+        follower.setStartingPose(new Pose(95.73071528751754, 8.078541374474053, Math.toRadians(90)));  // starting spot
         paths = new Paths(follower);
         setPathState(0);
     }
@@ -205,7 +205,7 @@ public class AutoBottomRed {
             Shoot1 = follower.pathBuilder()  // this sets up all the paths with the control points and heading
                     .addPath(new BezierCurve(
                             new Pose(95.731, 8.079),
-                            new Pose(100.780, 16.561),
+                            new Pose(91.489, 13.734),
                             new Pose(82.805, 15.349)))
                     .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(65))
                     .build();
