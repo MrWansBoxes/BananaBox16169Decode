@@ -24,7 +24,8 @@ public class AutoSelector extends OpMode {
 
     AutoBottomBlue bottomBlueAuto;   // the bottom blue auto
     AutoBottomRed bottomRedAuto;     // the bottom red auto
-
+    AutoTopRed topRedAuto;           // the top red auto
+    AutoTopBlue topBlueAuto;         // the top blue auto
 
     @Override
     public void init() {
@@ -37,7 +38,8 @@ public class AutoSelector extends OpMode {
 
         bottomBlueAuto = new AutoBottomBlue(follower, flip1, intake, launcher1, launcher2);
         bottomRedAuto = new AutoBottomRed(follower, flip1, intake, launcher1, launcher2);
-
+        topRedAuto = new AutoTopRed(follower, flip1, intake, launcher1, launcher2);
+        topBlueAuto = new AutoTopBlue(follower, flip1, intake, launcher1, launcher2);
     }
 
     @Override
@@ -61,6 +63,12 @@ public class AutoSelector extends OpMode {
         if (alliance == Alliance.RED && startPos == StartPos.BOTTOM) {
             bottomRedAuto.start();
         }
+        if (alliance == Alliance.RED && startPos == StartPos.TOP) {
+            topRedAuto.start();
+        }
+        if (alliance == Alliance.BLUE && startPos == StartPos.TOP) {
+            topBlueAuto.start();
+        }
     }
 
     @Override
@@ -70,6 +78,12 @@ public class AutoSelector extends OpMode {
         }
         if (alliance == Alliance.RED && startPos == StartPos.BOTTOM) {
             bottomRedAuto.update();
+        }
+        if (alliance == Alliance.RED && startPos == StartPos.TOP) {
+            topRedAuto.start();
+        }
+        if (alliance == Alliance.BLUE && startPos == StartPos.TOP) {
+            topBlueAuto.start();
         }
     }
 }
