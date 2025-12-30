@@ -90,7 +90,7 @@ public class AutoBottomRed {
             case 0:
                 launcher1.setPower(launcherPowerFar1);  // set power to launcher and moves to shoot position
                 launcher2.setPower(launcherPowerFar2);
-                follower.followPath(paths.Shoot1);
+                follower.followPath(paths.Shoot1, true);
                 setPathState(1);
                 break;
 
@@ -99,13 +99,14 @@ public class AutoBottomRed {
                 if (!follower.isBusy()) launch3balls();   // when the robot finishes the path it will launch 3 balls
 
                 if (pathTimer.getElapsedTimeSeconds() > 4) {   // after 4 seconds it will move to next path and turn on the intake
-                    intake.setPower(intakeOn);
+                   // intake.setPower(intakeOn);
                     follower.followPath(paths.GotoBallPile1, true);
                     setPathState(2);
                 }
                 break;
             case 2:
                 if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
+                    intake.setPower(intakeOn);
                     follower.followPath(paths.IntakeBallPile1, true);
                     sleep(300);
                     intake.setPower(intakeOff);
