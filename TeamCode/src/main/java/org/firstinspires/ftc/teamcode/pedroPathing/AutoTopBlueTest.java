@@ -31,7 +31,7 @@ public class AutoTopBlueTest extends OpMode {
     private DcMotor intake;
     private DcMotor launcher1;
     private DcMotor launcher2;
-    private double launcherPowerFar1 = 0.85;  // variables for tuning
+    private double launcherPowerFar1 = 0.85;   // variables for tuning
     private double launcherPowerFar2 = -0.85;
     private int launcherOff = 0;
     private double launcherPowerClose1 = 0.68;
