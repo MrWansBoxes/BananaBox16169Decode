@@ -25,7 +25,7 @@ public class AutoTopRedTest extends OpMode {
     private TelemetryManager panelsTelemetry; // Panels Telemetry instance
     public Follower follower; // Pedro Pathing follower instance
     private int pathState; // Current autonomous path state (state machine)
-    private AutoBottomRedTest.Paths paths; // Paths defined in the Paths class
+    private Paths paths; // Paths defined in the Paths class
     private Timer pathTimer, actionTimer, opmodeTimer;
     private Servo flip1;
     private DcMotor intake;
@@ -54,7 +54,7 @@ public class AutoTopRedTest extends OpMode {
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(new Pose(72, 8, Math.toRadians(90)));
 
-        paths = new AutoBottomRedTest.Paths(follower); // Build paths
+        paths = new Paths(follower); // Build paths
 
         panelsTelemetry.debug("Status", "Initialized");
         panelsTelemetry.update(telemetry);
@@ -101,9 +101,12 @@ public class AutoTopRedTest extends OpMode {
         public PathChain Shoot1;
         public PathChain GotoBallPile1;
         public PathChain IntakeBallPile1;
-        public PathChain Shoot3;
+        public PathChain Shoot2;
         public PathChain GotoBallPile2;
         public PathChain IntakeBallPile2;
+
+        public PathChain Shoot3;
+
         public PathChain GotoBallPile3;
         public PathChain IntakeBallPile3;
         public PathChain Shoot4;
@@ -134,7 +137,7 @@ public class AutoTopRedTest extends OpMode {
                     .setTangentHeadingInterpolation()
                     .build();
 
-            Shoot3 = follower
+            Shoot2 = follower
                     .pathBuilder()
                     .addPath(
                             new BezierCurve(
@@ -290,7 +293,7 @@ public class AutoTopRedTest extends OpMode {
             case 7:
                 if(!follower.isBusy()) {
 
-                    follower.followPath(paths.Shoot2,true);
+                    follower.followPath(paths.Shoot3,true);
                     setPathState(8);
                 }
                 break;
