@@ -8,7 +8,7 @@ import com.pedropathing.follower.Follower;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.tuningAndConstants.Constants;
 
-@Autonomous(name = "Auto Selector")
+@Autonomous (name = "Auto Selector")
 public class AutoSelector extends OpMode {
 
     enum Alliance { BLUE, RED }
