@@ -63,6 +63,9 @@ public class TeleOpBlue extends OpMode {
     private int liftUp = 1;
     private int liftDown = 0;
 
+    double endGameStart;
+    boolean isEndGame = false;
+
 
     private DcMotorEx turret;    // turret
     private Limelight3A limelight;  // limelight
@@ -121,10 +124,17 @@ public class TeleOpBlue extends OpMode {
         limelight.start();   // starts the limelight
         follower.startTeleopDrive();  // starts the driving
         limelight.pipelineSwitch(1);  // pipeline 1 is for blue tracking
+        endGameStart = getRuntime() + 90;
     }
 
     @Override
     public void loop() {
+
+        if (endGameStart >= getRuntime() && !isEndGame) {
+            gamepad1.rumbleBlips(3);
+            gamepad2.rumbleBlips(3);
+            isEndGame = true;
+        }
         detectedColor = bench.getDetectedColor(telemetry);
         telemetry.addData("Detected Color", detectedColor);
         //Call this once per loop

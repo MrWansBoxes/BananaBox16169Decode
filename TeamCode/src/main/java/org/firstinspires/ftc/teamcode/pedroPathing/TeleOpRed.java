@@ -63,6 +63,9 @@ public class TeleOpRed extends OpMode {
     private int liftUp = 1;
     private int liftDown = 0;
 
+    double endGameStart;
+    boolean isEndGame = false;
+
 
     private DcMotorEx turret;    // turret
     private Limelight3A limelight;  // limelight
@@ -78,7 +81,7 @@ public class TeleOpRed extends OpMode {
     @Override
     public void init() {
 
-bench.init(hardwareMap);
+        bench.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
         follower.setStartingPose(startingPose == null ? new Pose() : startingPose);   // set where the robot starts in TeleOp
@@ -120,38 +123,45 @@ bench.init(hardwareMap);
     public void start() {
         limelight.start();   // starts the limelight
         follower.startTeleopDrive();  // starts the driving
-        limelight.pipelineSwitch(0);  // pipeline 0 is for red tracking
+        limelight.pipelineSwitch(0);  // pipeline 1 is for blue tracking
+        endGameStart = getRuntime() + 90;
     }
 
     @Override
     public void loop() {
-      detectedColor = bench.getDetectedColor(telemetry);
-      telemetry.addData("Detected Color", detectedColor);
+
+        if (endGameStart >= getRuntime() && !isEndGame) {
+            gamepad1.rumbleBlips(3);
+            gamepad2.rumbleBlips(3);
+            isEndGame = true;
+        }
+        detectedColor = bench.getDetectedColor(telemetry);
+        telemetry.addData("Detected Color", detectedColor);
         //Call this once per loop
         flip1.setPosition(flickDown);
-      if (detectedColor == ColorSensor.DetectedColor.GREEN){
-          light.setPosition(lightGreen);
-      }
-      else if (detectedColor == ColorSensor.DetectedColor.PURPLE){
-          light.setPosition(lightPurple);
-      }
-      else if(detectedColor == ColorSensor.DetectedColor.UNKNOWN){
-          light.setPosition(lightOff);
-      }
+        if (detectedColor == ColorSensor.DetectedColor.GREEN){
+            light.setPosition(lightGreen);
+        }
+        else if (detectedColor == ColorSensor.DetectedColor.PURPLE){
+            light.setPosition(lightPurple);
+        }
+        else if(detectedColor == ColorSensor.DetectedColor.UNKNOWN){
+            light.setPosition(lightOff);
+        }
 
         follower.update();
         telemetryM.update();
         if (!automatedDrive) {
-            // Make the last parameter false for field-centric
-            // In case the drivers want to use a "slowMode" you can scale the vectors
-            // This is the normal version to use in the TeleOp
+            //Make the last parameter false for field-centric
+            //In case the drivers want to use a "slowMode" you can scale the vectors
+            //This is the normal version to use in the TeleOp
             if (!slowMode) follower.setTeleOpDrive(
                     -gamepad1.left_stick_y,
                     -gamepad1.left_stick_x,
                     -gamepad1.right_stick_x,
                     true // Robot Centric
             );
-                // This is how it looks with slowMode on
+                //This is how it looks with slowMode on
             else follower.setTeleOpDrive(
                     -gamepad1.left_stick_y * slowModeMultiplier,
                     -gamepad1.left_stick_x * slowModeMultiplier,
@@ -282,6 +292,7 @@ bench.init(hardwareMap);
                 double derivative = error - lastError;
 
                 double power = P * error + I * integral + D * derivative;
+
 
                 turret.setPower(power);
 
