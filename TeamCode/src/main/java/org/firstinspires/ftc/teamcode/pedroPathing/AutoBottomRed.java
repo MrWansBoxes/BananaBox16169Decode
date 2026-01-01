@@ -58,7 +58,6 @@ public class AutoBottomRed {
     }
 
     private void launch3balls() {  // we call this function every time you want to launch 3 balls
-        sleep(200);
         flip1.setPosition(flickUp);
         sleep(200);
         flip1.setPosition(flickDown);
