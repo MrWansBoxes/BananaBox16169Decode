@@ -80,10 +80,10 @@ public class AutoSelector extends OpMode {
             bottomRedAuto.update();
         }
         if (alliance == Alliance.RED && startPos == StartPos.TOP) {
-            topRedAuto.start();
+            topRedAuto.update();
         }
         if (alliance == Alliance.BLUE && startPos == StartPos.TOP) {
-            topBlueAuto.start();
+            topBlueAuto.update();
         }
     }
 }
