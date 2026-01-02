@@ -47,8 +47,8 @@ public class TeleOpBlue extends OpMode {
     int parkflag = 0;
     int limeflag = 0;
 
-    private double launcherPowerFar1 = 0.85;
-    private double launcherPowerFar2 = -0.85;
+    private double launcherPowerFar1 = 0.88;
+    private double launcherPowerFar2 = -0.88;
     private int launcherOff = 0;
     private double launcherPowerClose1 = 0.68;
     private double launcherPowerClose2 = -0.68;
@@ -65,6 +65,7 @@ public class TeleOpBlue extends OpMode {
 
     double endGameStart;
     boolean isEndGame = false;
+    double trackTimer;
 
 
     private DcMotorEx turret;    // turret
@@ -84,7 +85,7 @@ public class TeleOpBlue extends OpMode {
         bench.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(startingPose == null ? new Pose() : startingPose);   // set where the robot starts in TeleOp
+        follower.setStartingPose(startingPose == null ? new Pose(72,72,90) : startingPose);   // set where the robot starts in TeleOp
         follower.update();
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
@@ -124,15 +125,21 @@ public class TeleOpBlue extends OpMode {
         limelight.start();   // starts the limelight
         follower.startTeleopDrive();  // starts the driving
         limelight.pipelineSwitch(1);  // pipeline 1 is for blue tracking
-        endGameStart = getRuntime() + 90;
+        endGameStart = getRuntime() + 103;
+        trackTimer = getRuntime() + 15;
     }
 
     @Override
     public void loop() {
-
-        if (endGameStart >= getRuntime() && !isEndGame) {
-            gamepad1.rumbleBlips(3);
-            gamepad2.rumbleBlips(3);
+telemetry.addData("Y", follower.getPose().getY());
+        if (trackTimer <= getRuntime()) {
+            gamepad2.rumbleBlips(1);
+            trackTimer = getRuntime() + 15;
+        }
+telemetry.addData("Runtime", getRuntime());
+        if (endGameStart <= getRuntime() && !isEndGame) {
+            gamepad1.rumble(5000);
+            gamepad2.rumble(5000);
             isEndGame = true;
         }
         detectedColor = bench.getDetectedColor(telemetry);
@@ -193,10 +200,12 @@ public class TeleOpBlue extends OpMode {
         //     }
 
         if (gamepad1.yWasPressed()) {
-
-            flip1.setPosition(flickUp);
-            sleep(200);
-            flip1.setPosition(flickDown);
+            if (follower.getPose().getY() >= 87 || follower.getPose().getY() <= 35) {
+                flip1.setPosition(flickUp);
+                sleep(200);
+                flip1.setPosition(flickDown);
+                gamepad1.rumbleBlips(1);
+            }
         }
 
         if (gamepad1.aWasPressed()){
@@ -244,20 +253,18 @@ public class TeleOpBlue extends OpMode {
                 limeflag = 0;
             }
         }
-
         if (gamepad1.dpadDownWasPressed()) {
-            if (launchflag == 0) {
-                launcher1.setPower(launcherPowerClose1);
-                launcher2.setPower(launcherPowerClose2);
-                launchflag = 1;
-                limeflag = 1;
-            }
-            else if (launchflag == 1) {
-                launcher1.setPower(launcherOff);
-                launcher2.setPower(launcherOff);
-                launchflag = 0;
-                limeflag = 0;
-            }
+                if (launchflag == 0) {
+                        launcher1.setPower(launcherPowerClose1);
+                        launcher2.setPower(launcherPowerClose2);
+                        launchflag = 1;
+                        limeflag = 1;
+                } else if (launchflag == 1) {
+                    launcher1.setPower(launcherOff);
+                    launcher2.setPower(launcherOff);
+                    launchflag = 0;
+                    limeflag = 0;
+                }
         }
 
         if (gamepad2.yWasPressed()) {
