@@ -82,9 +82,9 @@ public class AutoTopBlue {
     public static class Paths {
 
         public PathChain Shoot1,GotoBallPile1, IntakeBallPile1,
-        Shoot2, GotoBallPile2, IntakeBallPile2,
-        Shoot3, GotoBallPile3, IntakeBallPile3,
-        Shoot4, GoPark;
+                Shoot2, GotoBallPile2, IntakeBallPile2,
+                Shoot3, GotoBallPile3, IntakeBallPile3,
+                Shoot4, GoPark;
 
         public Paths(Follower follower) {
             Shoot1 = follower
