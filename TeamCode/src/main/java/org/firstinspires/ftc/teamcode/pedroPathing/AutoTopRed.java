@@ -57,7 +57,7 @@ public class AutoTopRed {
     }
 
     private void launch3balls() {  // we call this function every time you want to launch 3 balls
-        sleep(200);
+
         flip1.setPosition(flickUp);
         sleep(200);
         flip1.setPosition(flickDown);
@@ -76,129 +76,129 @@ public class AutoTopRed {
         launcher2.setPower(launcherOff);
         intake.setPower(intakeOff);
     }
-        public static class Paths {
+    public static class Paths {
 
-            public PathChain Shoot1, GotoBallPile1, IntakeBallPile1,
-                    Shoot2, GotoBallPile2, IntakeBallPile2,
-                    Shoot3, GotoBallPile3, IntakeBallPile3,
-                    Shoot4, GoPark;
+        public PathChain Shoot1, GotoBallPile1, IntakeBallPile1,
+                Shoot2, GotoBallPile2, IntakeBallPile2,
+                Shoot3, GotoBallPile3, IntakeBallPile3,
+                Shoot4, GoPark;
 
-            public Paths(Follower follower){
+        public Paths(Follower follower){
 
 
-        Shoot1 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(new Pose(111.686, 135.518), new Pose(83.815, 83.209))
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(52))
-                .build();
+            Shoot1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(111.686, 135.518), new Pose(83.815, 83.209))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(52))
+                    .build();
 
-        GotoBallPile1 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(new Pose(83.815, 83.209), new Pose(104.819, 83.411))
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
-                .build();
+            GotoBallPile1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(83.815, 83.209), new Pose(104.819, 83.411))
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
+                    .build();
 
-        IntakeBallPile1 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(new Pose(104.819, 83.411), new Pose(129.257, 83.411))
-                )
-                .setTangentHeadingInterpolation()
-                .build();
+            IntakeBallPile1 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(104.819, 83.411), new Pose(128.651, 83.411))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
 
-        Shoot2 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                new Pose(129.257, 83.411),
-                                new Pose(104.617, 69.273),
-                                new Pose(83.815, 83.209)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(52))
-                .build();
+            Shoot3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(128.651, 83.411),
+                                    new Pose(104.617, 69.273),
+                                    new Pose(83.815, 83.209)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(52))
+                    .build();
 
-        GotoBallPile2 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                new Pose(83.815, 83.209),
-                                new Pose(81.795, 58.771),
-                                new Pose(104.617, 59.579)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
-                .build();
+            GotoBallPile2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(83.815, 83.209),
+                                    new Pose(81.795, 58.771),
+                                    new Pose(104.617, 59.579)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
+                    .build();
 
-        IntakeBallPile2 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(new Pose(104.617, 59.579), new Pose(135.719, 59.579))
-                )
-                .setTangentHeadingInterpolation()
-                .build();
+            IntakeBallPile2 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(104.617, 59.579), new Pose(135.114, 59.781))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
 
-        Shoot3 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                new Pose(135.719, 59.579),
-                                new Pose(77.554, 50.087),
-                                new Pose(83.815, 83.209)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(52))
-                .build();
+            Shoot3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(135.114, 59.781),
+                                    new Pose(77.554, 50.087),
+                                    new Pose(83.815, 83.209)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(52))
+                    .build();
 
-        GotoBallPile3 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                new Pose(83.815, 83.209),
-                                new Pose(75.736, 33.122),
-                                new Pose(104.415, 35.142)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
-                .build();
+            GotoBallPile3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(83.815, 83.209),
+                                    new Pose(75.736, 33.122),
+                                    new Pose(104.415, 35.142)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(52), Math.toRadians(0))
+                    .build();
 
-        IntakeBallPile3 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierLine(new Pose(104.415, 35.142), new Pose(135.719, 35.142))
-                )
-                .setTangentHeadingInterpolation()
-                .build();
+            IntakeBallPile3 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierLine(new Pose(104.415, 35.142), new Pose(135.114, 35.344))
+                    )
+                    .setTangentHeadingInterpolation()
+                    .build();
 
-        Shoot4 = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                new Pose(135.719, 35.142),
-                                new Pose(80.381, 38.777),
-                                new Pose(83.209, 19.792)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(60))
-                .build();
+            Shoot4 = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(135.114, 35.344),
+                                    new Pose(80.381, 38.777),
+                                    new Pose(83.209, 19.792)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(60))
+                    .build();
 
-        GoPark = follower
-                .pathBuilder()
-                .addPath(
-                        new BezierCurve(
-                                new Pose(83.209, 19.792),
-                                new Pose(107.243, 22.418),
-                                new Pose(108.050, 10.300)
-                        )
-                )
-                .setLinearHeadingInterpolation(Math.toRadians(60), Math.toRadians(180))
-                .build();
+            GoPark = follower
+                    .pathBuilder()
+                    .addPath(
+                            new BezierCurve(
+                                    new Pose(83.209, 19.792),
+                                    new Pose(85.431, 11.512),
+                                    new Pose(111.686, 10.300)
+                            )
+                    )
+                    .setLinearHeadingInterpolation(Math.toRadians(60), Math.toRadians(0))
+                    .build();
+        }
     }
-}
     /* You could check for
            - Follower State: "if(!follower.isBusy()) {}"
            - Time: "if(pathTimer.getElapsedTimeSeconds() > 1) {}"
@@ -208,115 +208,117 @@ public class AutoTopRed {
     public int autonomousPathUpdate() {
         switch (pathState) {
             case 0:
-
-                launcher1.setPower(launcherPowerClose1);
-                launcher2.setPower(launcherPowerClose2);      // start launcher motors
-                follower.followPath(paths.Shoot1);
+                launcher1.setPower(launcherPowerClose1);  // set power to launcher and moves to shoot position
+                launcher2.setPower(launcherPowerClose2);
+                follower.followPath(paths.Shoot1, true);
                 setPathState(1);
-
                 break;
+
             case 1:
 
-
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                if (!follower.isBusy()) {
+                    flip1.setPosition(flickUp);
+                    sleep(200);
+                    flip1.setPosition(flickDown);
+                    launch3balls();// when the robot finishes the path it will launch 3 balls
+                }
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     intake.setPower(intakeOn);
-                    follower.followPath(paths.GotoBallPile1,true);
+                    follower.followPath(paths.GotoBallPile1, true);
                     setPathState(2);
                 }
 
-
-                if(!follower.isBusy()) {
-                    launch3balls();
-                }
                 break;
             case 2:
-                if(!follower.isBusy()) {
-
-                    follower.followPath(paths.IntakeBallPile1,true);
+                if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
+                    follower.followPath(paths.IntakeBallPile1, 0.5, true);
                     setPathState(3);
-                    sleep(300);
-                    intake.setPower(intakeOff);
-                    launcher1.setPower(launcherPowerClose1);
-                    launcher2.setPower(launcherPowerClose2);      // start launcher motors
                 }
                 break;
-            case 3:
-                if(!follower.isBusy()) {
 
-                    follower.followPath(paths.Shoot2,true);
+            case 3:
+                if (!follower.isBusy()) {// moves to shoot position
+
+                    intake.setPower(intakeOff);
+                    launcher1.setPower(launcherPowerClose1);
+                    launcher2.setPower(launcherPowerClose2);
+                    follower.followPath(paths.Shoot2, true);
                     setPathState(4);
                 }
                 break;
+
             case 4:
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+
+                if (!follower.isBusy()) launch3balls();  // when the robot finishes the path it will launch 3 balls
+
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     intake.setPower(intakeOn);
-                    follower.followPath(paths.GotoBallPile2,true);
+                    follower.followPath(paths.GotoBallPile2, true);
+                    setPathState(5);
+                }
+
+                break;
+
+            case 5:
+                if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
+                    follower.followPath(paths.IntakeBallPile2, 0.5,true);
                     setPathState(6);
                 }
-                if (!follower.isBusy()) {
-                    launch3balls();
-                }
                 break;
-            case 6:
-                if(!follower.isBusy()) {
 
-                    follower.followPath(paths.IntakeBallPile2,true);
-                    setPathState(7);
-                    sleep(300);
+            case 6:
+                if (!follower.isBusy()) {  // moves to shoot position
                     intake.setPower(intakeOff);
                     launcher1.setPower(launcherPowerClose1);
-                    launcher2.setPower(launcherPowerClose2);      // start launcher motors for close side
+                    launcher2.setPower(launcherPowerClose2);
+                    follower.followPath(paths.Shoot3, true);
+                    setPathState(7);
                 }
                 break;
+
             case 7:
-                if(!follower.isBusy()) {
 
-                    follower.followPath(paths.Shoot3,true);
-                    setPathState(8);
-                }
-                break;
-            case 8:
+                if (!follower.isBusy()) launch3balls();  // when the robot finishes the path it will launch 3 balls
 
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     intake.setPower(intakeOn);
                     follower.followPath(paths.GotoBallPile3, true);
-                    setPathState(9);
+                    setPathState(8);
                 }
-                if(!follower.isBusy()) {
-                    launch3balls();
+
+                break;
+
+            case 8:
+                if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
+                    follower.followPath(paths.IntakeBallPile3, 0.5, true);
+                    setPathState(9);
                 }
                 break;
 
             case 9:
-                if(!follower.isBusy()) {
-
-                    follower.followPath(paths.IntakeBallPile3, true);
-                    setPathState(10);
-                    sleep(300);
+                if (!follower.isBusy()) {  // moves to shoot position
                     intake.setPower(intakeOff);
                     launcher1.setPower(launcherPowerFar1);
                     launcher2.setPower(launcherPowerFar2);
+                    follower.followPath(paths.Shoot4, true);
+                    setPathState(10);
                 }
                 break;
+
             case 10:
-                if(!follower.isBusy()) {
 
-                    follower.followPath(paths.Shoot4,true);
-                    setPathState(4);
+                if (!follower.isBusy()) {
+                    flip1.setPosition(flickUp);
+                    sleep(200);
+                    flip1.setPosition(flickDown);
+                    launch3balls();// when the robot finishes the path it will launch 3 balls
                 }
-                break;
-            case 11:
 
-                if (pathTimer.getElapsedTimeSeconds() > 4) {
+                if (pathTimer.getElapsedTimeSeconds() > 4) {  // after 4 seconds it will move to next path and turn on the intake
                     follower.followPath(paths.GoPark, true);
                     setPathState(-1);
                 }
 
-                if(!follower.isBusy()) {
-
-                    launch3balls();
-
-                }
                 break;
 
 
