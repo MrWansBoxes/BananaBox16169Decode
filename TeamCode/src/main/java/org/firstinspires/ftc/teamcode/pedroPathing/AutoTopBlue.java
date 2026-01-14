@@ -15,7 +15,7 @@ public class AutoTopBlue {
 
     private final Follower follower;
 
-    private final Servo flip1;
+private final Servo flip1;
     private final DcMotor intake;
     private final DcMotor launcher1;
     private final DcMotor launcher2;
