@@ -25,10 +25,10 @@ public class AutoBottomRed {
     private final Timer pathTimer, shootTimer, intakeTimer;
 
 
-    private final double launcherPowerFar1 = 0.8;  // Variables for tuning
-    private final double launcherPowerFar2 = -0.8;
-    private final double launcherPowerClose1 = 0.68;
-    private final double launcherPowerClose2 = -0.68;
+    private final double launcherPowerFar1 = 0.82;  // Variables for tuning
+    private final double launcherPowerFar2 = -0.82;
+    private final double launcherPowerClose1 = 0.65;
+    private final double launcherPowerClose2 = -0.65;
     private final int launcherOff = 0;
     private final int intakeOn = 1;
     private final int intakeOff = 0;
@@ -66,13 +66,13 @@ public class AutoBottomRed {
         flip1.setPosition(flickDown);
         sleep(300);
         intake.setPower(intakeOn);
-        sleep(500);
+        sleep(600);
         flip1.setPosition(flickUp);
-        sleep(500);
+        sleep(300);
         flip1.setPosition(flickDown);
-        sleep(450);
+        sleep(750);
         flip1.setPosition(flickUp);
-        sleep(500);
+        sleep(400);
         flip1.setPosition(flickDown);
         launcher1.setPower(launcherOff);
         launcher2.setPower(launcherOff);
@@ -113,7 +113,7 @@ public class AutoBottomRed {
                 break;
             case 2:
                 if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
-                    follower.followPath(paths.IntakeBallPile1, 0.5, true);
+                    follower.followPath(paths.IntakeBallPile1, 0.6, true);
                     setPathState(3);
                 }
                 break;
@@ -217,124 +217,114 @@ public class AutoBottomRed {
 
         public Paths(Follower follower) {
 
-            Shoot1 = follower
-                    .pathBuilder()
-                    .addPath(
+            Shoot1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(95.731, 8.684),
-                                    new Pose(100.174, 21.408),
-                                    new Pose(86.440, 20.802)
+                                    new Pose(95.731, 8.079),
+                                    new Pose(85.633, 18.783),
+                                    new Pose(85.431, 18.783)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(71))
+                    ).setLinearHeadingInterpolation(Math.toRadians(90), Math.toRadians(63))
+
                     .build();
 
-            GotoBallPile1 = follower
-                    .pathBuilder()
-                    .addPath(
+            GotoBallPile1 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(86.440, 20.802),
+                                    new Pose(85.431, 18.783),
                                     new Pose(97.346, 22.216),
-                                    new Pose(103.203, 33.122)
+                                    new Pose(103.405, 35.344)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(71), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(63), Math.toRadians(0))
+
                     .build();
 
-            IntakeBallPile1 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(103.203, 33.122), new Pose(134.912, 32.516))
-                    )
-                    .setTangentHeadingInterpolation()
+            IntakeBallPile1 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(103.405, 35.344),
+
+                                    new Pose(135.316, 35.142)
+                            )
+                    ).setTangentHeadingInterpolation()
+
                     .build();
 
-            Shoot2 = follower
-                    .pathBuilder()
-                    .addPath(
+            Shoot2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(134.912, 32.516),
+                                    new Pose(135.316, 35.142),
                                     new Pose(101.790, 47.461),
-                                    new Pose(86.440, 20.802)
+                                    new Pose(85.431, 18.985)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(68))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(59))
+
                     .build();
 
-            GotoBallPile2 = follower
-                    .pathBuilder()
-                    .addPath(
+            GotoBallPile2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(86.440, 20.802),
+                                    new Pose(85.431, 18.985),
                                     new Pose(92.701, 47.461),
-                                    new Pose(102.799, 57.358)
+                                    new Pose(102.799, 58.569)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(68), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(59), Math.toRadians(0))
+
                     .build();
 
-            IntakeBallPile2 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(102.799, 57.358), new Pose(134.710, 56.954))
-                    )
-                    .setTangentHeadingInterpolation()
+            IntakeBallPile2 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(102.799, 58.569),
+
+                                    new Pose(134.912, 57.964)
+                            )
+                    ).setTangentHeadingInterpolation()
+
                     .build();
 
-            Shoot3 = follower
-                    .pathBuilder()
-                    .addPath(
+            Shoot3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(134.710, 56.954),
+                                    new Pose(134.912, 57.964),
                                     new Pose(85.431, 53.318),
                                     new Pose(88.864, 88.460)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(43))
+
                     .build();
 
-            GotoBallPile3 = follower
-                    .pathBuilder()
-                    .addPath(
+            GotoBallPile3 = follower.pathBuilder().addPath(
                             new BezierCurve(
                                     new Pose(88.864, 88.460),
                                     new Pose(93.307, 82.603),
-                                    new Pose(104.213, 81.593)
+                                    new Pose(104.415, 82.603)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(45), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(0))
+
                     .build();
 
-            IntakeBallPile3 = follower
-                    .pathBuilder()
-                    .addPath(
-                            new BezierLine(new Pose(104.213, 81.593), new Pose(128.853, 81.391))
-                    )
-                    .setTangentHeadingInterpolation()
+            IntakeBallPile3 = follower.pathBuilder().addPath(
+                            new BezierLine(
+                                    new Pose(104.415, 82.603),
+
+                                    new Pose(128.853, 82.401)
+                            )
+                    ).setTangentHeadingInterpolation()
+
                     .build();
 
-            Shoot4 = follower
-                    .pathBuilder()
-                    .addPath(
+            Shoot4 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(128.853, 81.391),
+                                    new Pose(128.853, 82.401),
                                     new Pose(86.642, 81.593),
-                                    new Pose(88.864, 88.460)
+                                    new Pose(91.086, 90.682)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(45))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(40))
+
                     .build();
 
-            GoPark = follower
-                    .pathBuilder()
-                    .addPath(
+            GoPark = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(88.864, 88.460),
+                                    new Pose(91.086, 90.682),
                                     new Pose(102.597, 97.952),
                                     new Pose(116.129, 88.662)
                             )
-                    )
-                    .setLinearHeadingInterpolation(Math.toRadians(50), Math.toRadians(270))
+                    ).setLinearHeadingInterpolation(Math.toRadians(40), Math.toRadians(270))
+
                     .build();
         }
     }
