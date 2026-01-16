@@ -143,7 +143,7 @@ public class AutoBottomRed {
 
             case 5:
                 if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
-                    follower.followPath(paths.IntakeBallPile2, 0.5,true);
+                    follower.followPath(paths.IntakeBallPile2, 0.6,true);
                     setPathState(6);
                 }
                 break;
@@ -173,7 +173,7 @@ public class AutoBottomRed {
 
             case 8:
                 if (!follower.isBusy()) {  // when it is finished with its path the robot will intake the balls then power up the motors and turn off the intake
-                    follower.followPath(paths.IntakeBallPile3, 0.5, true);
+                    follower.followPath(paths.IntakeBallPile3, 0.6, true);
                     setPathState(9);
                 }
                 break;
@@ -184,6 +184,7 @@ public class AutoBottomRed {
                     launcher1.setPower(launcherPowerClose1);
                     launcher2.setPower(launcherPowerClose2);
                     follower.followPath(paths.Shoot4, true);
+                    setPathState(10);
                 }
                 break;
 
@@ -231,7 +232,7 @@ public class AutoBottomRed {
                             new BezierCurve(
                                     new Pose(85.431, 18.783),
                                     new Pose(97.346, 22.216),
-                                    new Pose(103.405, 35.344)
+                                    new Pose(103.001, 34.940)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(63), Math.toRadians(0))
 
@@ -239,9 +240,9 @@ public class AutoBottomRed {
 
             IntakeBallPile1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(103.405, 35.344),
+                                    new Pose(103.001, 34.940),
 
-                                    new Pose(135.316, 35.142)
+                                    new Pose(134.710, 34.738)
                             )
                     ).setTangentHeadingInterpolation()
 
@@ -249,29 +250,29 @@ public class AutoBottomRed {
 
             Shoot2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(135.316, 35.142),
+                                    new Pose(134.710, 34.738),
                                     new Pose(101.790, 47.461),
-                                    new Pose(85.431, 18.985)
+                                    new Pose(85.431, 18.783)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(59))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(67))
 
                     .build();
 
             GotoBallPile2 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(85.431, 18.985),
+                                    new Pose(85.431, 18.783),
                                     new Pose(92.701, 47.461),
-                                    new Pose(102.799, 58.569)
+                                    new Pose(103.001, 58.973)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(59), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(67), Math.toRadians(0))
 
                     .build();
 
             IntakeBallPile2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(102.799, 58.569),
+                                    new Pose(103.001, 58.973),
 
-                                    new Pose(134.912, 57.964)
+                                    new Pose(135.114, 58.771)
                             )
                     ).setTangentHeadingInterpolation()
 
@@ -279,11 +280,11 @@ public class AutoBottomRed {
 
             Shoot3 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(134.912, 57.964),
+                                    new Pose(135.114, 58.771),
                                     new Pose(85.431, 53.318),
                                     new Pose(88.864, 88.460)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(43))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(47))
 
                     .build();
 
@@ -291,17 +292,17 @@ public class AutoBottomRed {
                             new BezierCurve(
                                     new Pose(88.864, 88.460),
                                     new Pose(93.307, 82.603),
-                                    new Pose(104.415, 82.603)
+                                    new Pose(104.415, 83.209)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(43), Math.toRadians(0))
+                    ).setLinearHeadingInterpolation(Math.toRadians(47), Math.toRadians(0))
 
                     .build();
 
             IntakeBallPile3 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(104.415, 82.603),
+                                    new Pose(104.415, 83.209),
 
-                                    new Pose(128.853, 82.401)
+                                    new Pose(128.853, 83.007)
                             )
                     ).setTangentHeadingInterpolation()
 
@@ -309,21 +310,21 @@ public class AutoBottomRed {
 
             Shoot4 = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(128.853, 82.401),
+                                    new Pose(128.853, 83.007),
                                     new Pose(86.642, 81.593),
-                                    new Pose(91.086, 90.682)
+                                    new Pose(88.864, 88.460)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(40))
+                    ).setLinearHeadingInterpolation(Math.toRadians(0), Math.toRadians(46))
 
                     .build();
 
             GoPark = follower.pathBuilder().addPath(
                             new BezierCurve(
-                                    new Pose(91.086, 90.682),
+                                    new Pose(88.864, 88.460),
                                     new Pose(102.597, 97.952),
                                     new Pose(116.129, 88.662)
                             )
-                    ).setLinearHeadingInterpolation(Math.toRadians(40), Math.toRadians(270))
+                    ).setLinearHeadingInterpolation(Math.toRadians(46), Math.toRadians(270))
 
                     .build();
         }
