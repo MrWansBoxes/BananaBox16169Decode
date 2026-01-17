@@ -7,6 +7,7 @@ import com.bylazar.configurables.annotations.Configurable;
 import com.bylazar.telemetry.PanelsTelemetry;
 import com.bylazar.telemetry.TelemetryManager;
 import com.pedropathing.follower.Follower;
+import com.pedropathing.geometry.BezierCurve;
 import com.pedropathing.geometry.BezierLine;
 import com.pedropathing.geometry.Pose;
 import com.pedropathing.paths.HeadingInterpolator;
@@ -46,6 +47,7 @@ public class TeleOpBlue extends OpMode {
     int launchflag = 0;
     int parkflag = 0;
     int limeflag = 0;
+    int parentalcontrolsflag = 0;
 
     private double launcherPowerFar1 = 0.88;
     private double launcherPowerFar2 = -0.88;
@@ -85,13 +87,13 @@ public class TeleOpBlue extends OpMode {
         bench.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(startingPose == null ? new Pose(72,72,90) : startingPose);   // set where the robot starts in TeleOp
+        follower.setStartingPose(startingPose == null ? new Pose(32.31416549789621, 135.51753155680223,90) : startingPose);   // set where the robot starts in TeleOp
         follower.update();
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierLine(follower::getPose, new Pose(45, 98))))
-                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(45), 0.8))
+                .addPath(new Path(new BezierCurve(follower::getPose, new Pose(59.781, 83.613))))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(143), 0.8))
                 .build();
 
         flip1 = hardwareMap.get(Servo.class,"flip1");  // all the hardware maps for the servos, DcMotors, limelight, and turret
@@ -166,7 +168,7 @@ telemetry.addData("Runtime", getRuntime());
                     -gamepad1.left_stick_y,
                     -gamepad1.left_stick_x,
                     -gamepad1.right_stick_x,
-                    true // Robot Centric
+                    true// Robot Centric
             );
                 //This is how it looks with slowMode on
             else follower.setTeleOpDrive(
@@ -176,31 +178,46 @@ telemetry.addData("Runtime", getRuntime());
                     true // Robot Centric
             );
         }
-        //Automated PathFollowing
-        //  if (gamepad1.aWasPressed()) {
-        //       follower.followPath(pathChain.get());
-        //      automatedDrive = true;
-        //  }
+       // Automated PathFollowing
+          if (gamepad1.dpadLeftWasPressed()) {
+               follower.followPath(pathChain.get());
+              automatedDrive = true;
+          }
         //Stop automated following if the follower is done
-        //     if (automatedDrive && (gamepad1.bWasPressed() || !follower.isBusy())) {
-        //       follower.startTeleopDrive();
-        //       automatedDrive = false;
-        //  }
+             if (automatedDrive && (gamepad1.dpadRightWasPressed() || !follower.isBusy())) {
+               follower.startTeleopDrive();
+               automatedDrive = false;
+          }
         //Slow Mode
-        if (gamepad1.rightBumperWasPressed()) {
-            slowMode = !slowMode;
-        }
+      //  if (gamepad1.rightBumperWasPressed()) {
+        //    slowMode = !slowMode;
+      //  }
         //Optional way to change slow mode strength
         //      if (gamepad1.xWasPressed()) {
         //         slowModeMultiplier += 0.25;
         //     }
         //Optional way to change slow mode strength
         //     if (gamepad2.yWasPressed()) {
-        //         slowModeMultiplier -= 0.25;
-        //     }
+        //         slowModeMultiplier -= 0.25;//     }
+        if (gamepad2.xWasPressed()) {
+            if(parentalcontrolsflag == 0){
+                parentalcontrolsflag = 1;
+            }
+            else if (parentalcontrolsflag == 1) {
+                parentalcontrolsflag = 0;
+            }
+        }
 
         if (gamepad1.yWasPressed()) {
-            if (follower.getPose().getY() >= 87 || follower.getPose().getY() <= 35) {
+            if (parentalcontrolsflag == 1) {
+                if (follower.getPose().getY() >= 78 || follower.getPose().getY() <= 35) {
+                    flip1.setPosition(flickUp);
+                    sleep(200);
+                    flip1.setPosition(flickDown);
+                    gamepad1.rumbleBlips(1);
+                }
+            }
+            else if (parentalcontrolsflag == 0) {
                 flip1.setPosition(flickUp);
                 sleep(200);
                 flip1.setPosition(flickDown);

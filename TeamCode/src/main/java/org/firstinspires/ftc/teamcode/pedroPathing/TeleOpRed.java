@@ -18,6 +18,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.hardware.limelightvision.LLResult;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.tuningAndConstants.Constants;
@@ -40,12 +42,18 @@ public class TeleOpRed extends OpMode {
     private double slowModeMultiplier = 0.5;  // we don't use this
 
     private Servo flip1, lift1, lift2, light;  // servos
-    private DcMotor intake, launcher1, launcher2;  // DcMotors
+    private DcMotor intake;
+    private DcMotorEx launcher1, launcher2;  // DcMotors
 
     int intakeflag = 0;   // these are the flags
     int launchflag = 0;
     int parkflag = 0;
     int limeflag = 0;
+    int parentalcontrolsflag = 0;
+
+    public double highVelocity = 2400;
+    public double lowVelocity = 1700;
+    double curTargetVelocity = highVelocity;
 
     private double launcherPowerFar1 = 0.88;
     private double launcherPowerFar2 = -0.88;
@@ -76,6 +84,9 @@ public class TeleOpRed extends OpMode {
     public static double I = 0.0;
     public static double D = 0.0;
 
+    static double F = 12.8;
+    static double P2 = 30;
+
     private double integral = 0;
     private double lastError = 0;
 
@@ -85,21 +96,21 @@ public class TeleOpRed extends OpMode {
         bench.init(hardwareMap);
 
         follower = Constants.createFollower(hardwareMap);
-        follower.setStartingPose(startingPose == null ? new Pose(72,72,90) : startingPose);   // set where the robot starts in TeleOp
+        follower.setStartingPose(startingPose == null ? new Pose(111.68583450210379, 135.51753155680223, 90) : startingPose);   // set where the robot starts in TeleOp
         follower.update();
 
         telemetryM = PanelsTelemetry.INSTANCE.getTelemetry();
         pathChain = () -> follower.pathBuilder() //Lazy Curve Generation
-                .addPath(new Path(new BezierLine(follower::getPose, new Pose(45, 98))))
-                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(45), 0.8))
+                .addPath(new Path(new BezierLine(follower::getPose, new Pose(83.815, 83.209))))
+                .setHeadingInterpolation(HeadingInterpolator.linearFromPoint(follower::getHeading, Math.toRadians(65), 0.8))
                 .build();
 
         flip1 = hardwareMap.get(Servo.class,"flip1");  // all the hardware maps for the servos, DcMotors, limelight, and turret
         lift1 = hardwareMap.get(Servo.class,"lift1");
         lift2 = hardwareMap.get(Servo.class,"lift2");
         intake = hardwareMap.get(DcMotor.class,"intake");
-        launcher1 = hardwareMap.get(DcMotor.class, "launcher1");
-        launcher2 = hardwareMap.get(DcMotor.class, "launcher2");
+        launcher1 = hardwareMap.get(DcMotorEx.class, "launcher1");
+        launcher2 = hardwareMap.get(DcMotorEx.class, "launcher2");
         light = hardwareMap.get(Servo.class,"light");
 
 
@@ -108,7 +119,11 @@ public class TeleOpRed extends OpMode {
 
         limelight = hardwareMap.get(Limelight3A.class, "limelight");
 
-
+        launcher1.setDirection(DcMotorSimple.Direction.FORWARD);
+        launcher2.setDirection(DcMotorSimple.Direction.REVERSE);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0,0,F);
+        launcher1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        launcher2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
 
         telemetry.addLine("Initialized");
@@ -131,6 +146,20 @@ public class TeleOpRed extends OpMode {
 
     @Override
     public void loop() {
+
+        double curVelocity = launcher1.getVelocity();
+        double error2 = curTargetVelocity - curVelocity;
+
+        telemetry.addData("Target Velocity", curTargetVelocity);
+        telemetry.addData("Current Velocity", "%.2f", curVelocity);
+        telemetry.addData("Error", "%.2f", error2);
+
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0,0,F);
+        launcher1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+        launcher2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
+
+
+
         telemetry.addData("Y", follower.getPose().getY());
         if (trackTimer <= getRuntime()) {
             gamepad2.rumbleBlips(1);
@@ -177,19 +206,19 @@ public class TeleOpRed extends OpMode {
             );
         }
         //Automated PathFollowing
-        //  if (gamepad1.aWasPressed()) {
-        //       follower.followPath(pathChain.get());
-        //      automatedDrive = true;
-        //  }
+          if (gamepad1.dpadLeftWasPressed()) {
+               follower.followPath(pathChain.get());
+              automatedDrive = true;
+          }
         //Stop automated following if the follower is done
-        //     if (automatedDrive && (gamepad1.bWasPressed() || !follower.isBusy())) {
-        //       follower.startTeleopDrive();
-        //       automatedDrive = false;
-        //  }
+             if (automatedDrive && (gamepad1.dpadRightWasPressed() || !follower.isBusy())) {
+               follower.startTeleopDrive();
+               automatedDrive = false;
+          }
         //Slow Mode
-        if (gamepad1.rightBumperWasPressed()) {
-            slowMode = !slowMode;
-        }
+      //  if (gamepad1.rightBumperWasPressed()) {
+      //      slowMode = !slowMode;
+      //  }
         //Optional way to change slow mode strength
         //      if (gamepad1.xWasPressed()) {
         //         slowModeMultiplier += 0.25;
@@ -198,9 +227,25 @@ public class TeleOpRed extends OpMode {
         //     if (gamepad2.yWasPressed()) {
         //         slowModeMultiplier -= 0.25;
         //     }
+if (gamepad2.xWasPressed()) {
+    if(parentalcontrolsflag == 0){
+        parentalcontrolsflag = 1;
+    }
+    else if (parentalcontrolsflag == 1) {
+        parentalcontrolsflag = 0;
+    }
+}
 
         if (gamepad1.yWasPressed()) {
-            if (follower.getPose().getY() >= 87 || follower.getPose().getY() <= 35) {
+            if (parentalcontrolsflag == 1) {
+                if (follower.getPose().getY() >= 78 || follower.getPose().getY() <= 35) {
+                    flip1.setPosition(flickUp);
+                    sleep(200);
+                    flip1.setPosition(flickDown);
+                    gamepad1.rumbleBlips(1);
+                }
+            }
+            else if (parentalcontrolsflag == 0) {
                 flip1.setPosition(flickUp);
                 sleep(200);
                 flip1.setPosition(flickDown);
@@ -241,8 +286,9 @@ public class TeleOpRed extends OpMode {
 
         if (gamepad1.dpadUpWasPressed()) {
             if (launchflag == 0) {
-                launcher1.setPower(launcherPowerFar1);
-                launcher2.setPower(launcherPowerFar2);
+                curTargetVelocity = highVelocity;
+                launcher1.setVelocity(curTargetVelocity);
+                launcher2.setVelocity(curTargetVelocity);
                 launchflag = 1;
                 limeflag = 1;
             }
@@ -255,8 +301,9 @@ public class TeleOpRed extends OpMode {
         }
         if (gamepad1.dpadDownWasPressed()) {
                 if (launchflag == 0) {
-                        launcher1.setPower(launcherPowerClose1);
-                        launcher2.setPower(launcherPowerClose2);
+                    curTargetVelocity = lowVelocity;
+                        launcher1.setVelocity(curTargetVelocity);
+                        launcher2.setVelocity(curTargetVelocity);
                         launchflag = 1;
                         limeflag = 1;
                 } else if (launchflag == 1) {
