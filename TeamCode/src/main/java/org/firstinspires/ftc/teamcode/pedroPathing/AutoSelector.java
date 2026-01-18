@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.pedroPathing;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -20,7 +22,7 @@ public class AutoSelector extends OpMode {
     Follower follower;
 
     Servo flip1;
-    DcMotor intake, launcher1, launcher2;
+    DcMotor intake, launcher1, launcher2, turret;
 
     AutoBottomBlue bottomBlueAuto;   // the bottom blue auto
     AutoBottomRed bottomRedAuto;     // the bottom red auto
@@ -35,6 +37,8 @@ public class AutoSelector extends OpMode {
         intake = hardwareMap.get(DcMotor.class, "intake");
         launcher1 = hardwareMap.get(DcMotor.class, "launcher1");
         launcher2 = hardwareMap.get(DcMotor.class, "launcher2");
+        turret = hardwareMap.get(DcMotor.class, "turret");
+
 
         bottomBlueAuto = new AutoBottomBlue(follower, flip1, intake, launcher1, launcher2);
         bottomRedAuto = new AutoBottomRed(follower, flip1, intake, launcher1, launcher2);
@@ -57,6 +61,7 @@ public class AutoSelector extends OpMode {
 
     @Override
     public void start() {
+        turret.setZeroPowerBehavior(BRAKE);
         if (alliance == Alliance.BLUE && startPos == StartPos.BOTTOM) {   // starts the selected auto
             bottomBlueAuto.start();
         }
