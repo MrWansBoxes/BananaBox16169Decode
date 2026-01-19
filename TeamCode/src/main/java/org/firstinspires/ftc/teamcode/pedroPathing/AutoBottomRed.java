@@ -131,7 +131,12 @@ public class AutoBottomRed {
 
             case 4:
 
-                if (!follower.isBusy()) launch3balls();  // when the robot finishes the path it will launch 3 balls
+                if (!follower.isBusy()) {
+                    flip1.setPosition(flickUp);
+                    sleep(200);
+                    flip1.setPosition(flickDown);
+                    launch3balls();// when the robot finishes the path it will launch 3 balls
+                }
 
                 if (pathTimer.getElapsedTimeSeconds() > 2) {  // after 4 seconds it will move to next path and turn on the intake
                     intake.setPower(intakeOn);
@@ -161,6 +166,9 @@ public class AutoBottomRed {
             case 7:
 
                 if (!follower.isBusy()) {
+                    flip1.setPosition(flickUp);
+                    sleep(200);
+                    flip1.setPosition(flickDown);
                     launch3balls();// when the robot finishes the path it will launch 3 balls
                 }
                 if (pathTimer.getElapsedTimeSeconds() > 2) {  // after 4 seconds it will move to next path and turn on the intake
@@ -191,6 +199,9 @@ public class AutoBottomRed {
             case 10:
 
                 if (!follower.isBusy()) {
+                    flip1.setPosition(flickUp);
+                    sleep(200);
+                    flip1.setPosition(flickDown);
                     launch3balls();// when the robot finishes the path it will launch 3 balls
                 }
 
