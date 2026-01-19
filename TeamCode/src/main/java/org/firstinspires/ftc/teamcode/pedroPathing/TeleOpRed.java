@@ -42,8 +42,7 @@ public class TeleOpRed extends OpMode {
     private double slowModeMultiplier = 0.5;  // we don't use this
 
     private Servo flip1, lift1, lift2, light;  // servos
-    private DcMotor intake;
-    private DcMotorEx launcher1, launcher2;  // DcMotors
+    private DcMotorEx launcher1, launcher2, intake;  // DcMotors
 
     int intakeflag = 0;   // these are the flags
     int launchflag = 0;
@@ -51,6 +50,9 @@ public class TeleOpRed extends OpMode {
     int limeflag = 0;
     int parentalcontrolsflag = 0;
 
+
+public double intakeVelocity = 3000;
+public double outtakeVelocity = -3000;
     public double highVelocity = 2400;
     public double lowVelocity = 1700;
     double curTargetVelocity = highVelocity;
@@ -108,7 +110,7 @@ public class TeleOpRed extends OpMode {
         flip1 = hardwareMap.get(Servo.class,"flip1");  // all the hardware maps for the servos, DcMotors, limelight, and turret
         lift1 = hardwareMap.get(Servo.class,"lift1");
         lift2 = hardwareMap.get(Servo.class,"lift2");
-        intake = hardwareMap.get(DcMotor.class,"intake");
+        intake = hardwareMap.get(DcMotorEx.class,"intake");
         launcher1 = hardwareMap.get(DcMotorEx.class, "launcher1");
         launcher2 = hardwareMap.get(DcMotorEx.class, "launcher2");
         light = hardwareMap.get(Servo.class,"light");
@@ -121,7 +123,7 @@ public class TeleOpRed extends OpMode {
 
         launcher1.setDirection(DcMotorSimple.Direction.FORWARD);
         launcher2.setDirection(DcMotorSimple.Direction.REVERSE);
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0,0,F);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P2,0,0,F);
         launcher1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         launcher2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
@@ -154,7 +156,7 @@ public class TeleOpRed extends OpMode {
         telemetry.addData("Current Velocity", "%.2f", curVelocity);
         telemetry.addData("Error", "%.2f", error2);
 
-        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P,0,0,F);
+        PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P2,0,0,F);
         launcher1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         launcher2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
 
@@ -255,7 +257,7 @@ if (gamepad2.xWasPressed()) {
 
         if (gamepad1.aWasPressed()){
             if (intakeflag == 0){
-                intake.setPower(intakeOn);
+                intake.setVelocity(intakeVelocity);
                 intakeflag = 1;
             }
             else if (intakeflag == 1) {
@@ -270,7 +272,7 @@ if (gamepad2.xWasPressed()) {
 
         if (gamepad1.bWasPressed()) {
             if (intakeflag == 0){
-                intake.setPower(intakeReverse);
+                intake.setVelocity(outtakeVelocity);
                 intakeflag = -1;
             }
             else if(intakeflag == -1){
