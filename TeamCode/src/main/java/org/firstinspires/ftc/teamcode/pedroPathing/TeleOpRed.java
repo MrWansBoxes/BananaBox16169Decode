@@ -48,7 +48,7 @@ public class TeleOpRed extends OpMode {
     int launchflag = 0;
     int parkflag = 0;
     int limeflag = 0;
-    int parentalcontrolsflag = 0;
+
 
 
 public double intakeVelocity = 3000;
@@ -126,10 +126,6 @@ public double outtakeVelocity = -3000;
         PIDFCoefficients pidfCoefficients = new PIDFCoefficients(P2,0,0,F);
         launcher1.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
         launcher2.setPIDFCoefficients(DcMotorEx.RunMode.RUN_USING_ENCODER, pidfCoefficients);
-
-
-        telemetry.addLine("Initialized");
-
 
         telemetry.addLine("Initialized");
 
@@ -229,30 +225,13 @@ public double outtakeVelocity = -3000;
         //     if (gamepad2.yWasPressed()) {
         //         slowModeMultiplier -= 0.25;
         //     }
-if (gamepad2.xWasPressed()) {
-    if(parentalcontrolsflag == 0){
-        parentalcontrolsflag = 1;
-    }
-    else if (parentalcontrolsflag == 1) {
-        parentalcontrolsflag = 0;
-    }
-}
+
 
         if (gamepad1.yWasPressed()) {
-            if (parentalcontrolsflag == 1) {
-                if (follower.getPose().getY() >= 78 || follower.getPose().getY() <= 35) {
                     flip1.setPosition(flickUp);
                     sleep(200);
                     flip1.setPosition(flickDown);
                     gamepad1.rumbleBlips(1);
-                }
-            }
-            else if (parentalcontrolsflag == 0) {
-                flip1.setPosition(flickUp);
-                sleep(200);
-                flip1.setPosition(flickDown);
-                gamepad1.rumbleBlips(1);
-            }
         }
 
         if (gamepad1.aWasPressed()){

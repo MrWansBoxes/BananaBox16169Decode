@@ -1,7 +1,8 @@
-package org.firstinspires.ftc.teamcode.pedroPathing;
+/*package org.firstinspires.ftc.teamcode.pedroPathing;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 
+import com.qualcomm.hardware.limelightvision.Limelight3A;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -23,6 +24,7 @@ public class AutoSelector extends OpMode {
 
     Servo flip1;
     DcMotor intake, launcher1, launcher2, turret;
+    Limelight3A limelight;
 
     AutoBottomBlue bottomBlueAuto;   // the bottom blue auto
     AutoBottomRed bottomRedAuto;     // the bottom red auto
@@ -40,7 +42,7 @@ public class AutoSelector extends OpMode {
         turret = hardwareMap.get(DcMotor.class, "turret");
 
 
-        bottomBlueAuto = new AutoBottomBlue(follower, flip1, intake, launcher1, launcher2);
+        bottomBlueAuto = new AutoBottomBlue(follower, flip1, intake, launcher1, launcher2, limelight);
         bottomRedAuto = new AutoBottomRed(follower, flip1, intake, launcher1, launcher2);
         topRedAuto = new AutoTopRed(follower, flip1, intake, launcher1, launcher2);
         topBlueAuto = new AutoTopBlue(follower, flip1, intake, launcher1, launcher2);
@@ -62,10 +64,14 @@ public class AutoSelector extends OpMode {
     @Override
     public void start() {
         turret.setZeroPowerBehavior(BRAKE);
-        if (alliance == Alliance.BLUE && startPos == StartPos.BOTTOM) {   // starts the selected auto
+        if (alliance == Alliance.BLUE && startPos == StartPos.BOTTOM) {// starts the selected auto
+            limelight.start();
+            limelight.pipelineSwitch(1);
             bottomBlueAuto.start();
         }
         if (alliance == Alliance.RED && startPos == StartPos.BOTTOM) {
+            limelight.start();
+            limelight.pipelineSwitch(0);
             bottomRedAuto.start();
         }
         if (alliance == Alliance.RED && startPos == StartPos.TOP) {
@@ -92,3 +98,4 @@ public class AutoSelector extends OpMode {
         }
     }
 }
+*/

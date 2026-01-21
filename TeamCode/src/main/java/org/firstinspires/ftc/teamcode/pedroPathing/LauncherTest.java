@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp
-@Configurable
+//@TeleOp
+//@Configurable
 public class LauncherTest extends OpMode {
 
 
