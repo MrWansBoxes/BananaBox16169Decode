@@ -82,9 +82,9 @@ public double outtakeVelocity = -3000;
     private Limelight3A limelight;  // limelight
 
     // --- PID constants ---
-    public static double P = 0.02;    // these are the PID controls for the turret and limelight
-    public static double I = 0.0;
-    public static double D = 0.0;
+    public static double P = 0.04;    // these are the PID controls for the turret and limelight
+    public static double I = 0.000000001;
+    public static double D = 0.05;
 
     static double F = 12.8;
     static double P2 = 30;

@@ -22,7 +22,8 @@ import com.qualcomm.robotcore.hardware.PIDFCoefficients;
 import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.pedroPathing.tuningAndConstants.Constants;
-
+@Autonomous
+@Configurable
 public class AutoBottomRed extends OpMode {
 
     private Follower follower;
@@ -58,9 +59,9 @@ public class AutoBottomRed extends OpMode {
     private double flickUp = 0.86;
     private double flickDown = 0.5;
 
-    public static double P = 0.02;    // these are the PID controls for the turret and limelight
-    public static double I = 0.0;
-    public static double D = 0.0;
+    public static double P = 0.04;    // these are the PID controls for the turret and limelight
+    public static double I = 0.000000001;
+    public static double D = 0.05;
 
     static double F = 12.8;
     static double P2 = 30;
@@ -372,7 +373,7 @@ public class AutoBottomRed extends OpMode {
                             new BezierCurve(
                                     new Pose(85.431, 18.783),
                                     new Pose(97.346, 22.216),
-                                    new Pose(103.001, 34.940)
+                                    new Pose(101.001, 34.940)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(63), Math.toRadians(0))
 
@@ -380,7 +381,7 @@ public class AutoBottomRed extends OpMode {
 
             IntakeBallPile1 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(103.001, 34.940),
+                                    new Pose(101.001, 34.940),
 
                                     new Pose(134.710, 34.738)
                             )
@@ -402,7 +403,7 @@ public class AutoBottomRed extends OpMode {
                             new BezierCurve(
                                     new Pose(85.431, 18.783),
                                     new Pose(92.701, 47.461),
-                                    new Pose(103.001, 58.973)
+                                    new Pose(101.001, 58.973)
                             )
                     ).setLinearHeadingInterpolation(Math.toRadians(67), Math.toRadians(0))
 
@@ -410,7 +411,7 @@ public class AutoBottomRed extends OpMode {
 
             IntakeBallPile2 = follower.pathBuilder().addPath(
                             new BezierLine(
-                                    new Pose(103.001, 58.973),
+                                    new Pose(101.001, 58.973),
 
                                     new Pose(135.114, 58.771)
                             )
